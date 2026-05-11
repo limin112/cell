@@ -2,18 +2,27 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bounds, Center, Environment, useGLTF } from '@react-three/drei';
 import { cellAccent, cellIcon } from '../data/cellIcons';
-import { cellModelUrl } from './assetRegistry';
+import { cellModelUrl, CELL_MODEL_URL } from './assetRegistry';
 
-/** 80px default; caller can bump for CompareCells. */
 type Props = {
   id: string;
-  size?: number;
-  /** Accent ring + bg */
+  /** Pixel size, or 'fill' to stretch to the parent box. */
+  size?: number | 'fill';
   ringColor?: string;
   className?: string;
+  /** 'circle' (default) → rounded-full pill thumb. 'square' → rounded-lg tile. */
+  shape?: 'circle' | 'square';
+  /** Override border; pass 'none' to drop the accent ring entirely. */
+  border?: string | 'none';
 };
 
-const SS_PREFIX = 'cell-thumb:v1:';
+const SS_PREFIX = 'cell-thumb:v2:';
+
+// Kick off GLB downloads before any thumb mounts — the 5–8 MB files dominate
+// the cold path and we want them parsed by the time Capture starts counting.
+for (const url of Object.values(CELL_MODEL_URL)) {
+  useGLTF.preload(url);
+}
 
 function readCache(id: string): string | null {
   try {
@@ -31,31 +40,39 @@ function writeCache(id: string, url: string) {
   }
 }
 
-/**
- * Thumbnail for a cell. Renders GLB once into a tiny offscreen Canvas,
- * grabs the raw WebGL buffer via toDataURL(), then swaps to <img>.
- */
 export function CellThumb({
   id,
   size = 36,
   ringColor,
   className = '',
+  shape = 'circle',
+  border,
 }: Props) {
   const url = cellModelUrl(id);
   const [dataUrl, setDataUrl] = useState<string | null>(() => readCache(id));
+  // useState's initializer only runs on the first mount — when `id` changes
+  // (e.g. a CellThumb reused inside MicroscopeView as the selected cell flips),
+  // we need to re-read the cache so we don't keep showing the old cell.
+  useEffect(() => {
+    setDataUrl(readCache(id));
+  }, [id]);
   const ring = ringColor ?? `${cellAccent(id)}55`;
+  const radiusClass = shape === 'circle' ? 'rounded-full' : 'rounded-lg';
+  const borderStyle =
+    border === 'none' ? 'none' : border ?? `2px solid ${ring}`;
+  const fill = size === 'fill';
+  const boxStyle: React.CSSProperties = fill
+    ? { width: '100%', height: '100%', border: borderStyle }
+    : { width: size, height: size, border: borderStyle };
 
-  // No GLB registered → emoji fallback (keeps old visual behavior)
   if (!url) {
     return (
       <span
         aria-hidden
-        className={`rounded-full flex items-center justify-center bg-white shrink-0 ${className}`}
+        className={`${radiusClass} flex items-center justify-center bg-white shrink-0 ${className}`}
         style={{
-          width: size,
-          height: size,
-          border: `2px solid ${ring}`,
-          fontSize: size * 0.5,
+          ...boxStyle,
+          fontSize: fill ? undefined : (size as number) * 0.5,
         }}
       >
         {cellIcon(id)}
@@ -63,34 +80,24 @@ export function CellThumb({
     );
   }
 
-  // Cached snapshot → just show it.
   if (dataUrl) {
     return (
       <img
         src={dataUrl}
         alt=""
-        className={`rounded-full bg-white shrink-0 object-cover ${className}`}
-        style={{
-          width: size,
-          height: size,
-          border: `2px solid ${ring}`,
-        }}
+        className={`${radiusClass} bg-white shrink-0 object-cover ${className}`}
+        style={boxStyle}
       />
     );
   }
 
-  // Cold thumb: render once, capture, then swap.
   return (
     <div
-      className={`rounded-full bg-white shrink-0 overflow-hidden relative ${className}`}
-      style={{
-        width: size,
-        height: size,
-        border: `2px solid ${ring}`,
-      }}
+      className={`${radiusClass} bg-white shrink-0 overflow-hidden relative ${className}`}
+      style={boxStyle}
     >
       <Canvas
-        dpr={1}
+        dpr={Math.min(window.devicePixelRatio || 1, 2)}
         frameloop="always"
         gl={{
           antialias: true,
@@ -107,67 +114,95 @@ export function CellThumb({
         <Suspense fallback={null}>
           <Bounds fit clip observe margin={1.15}>
             <Center>
-              <ThumbModel url={url} />
+              <ThumbModel
+                url={url}
+                onCaptured={(d) => {
+                  writeCache(id, d);
+                  setDataUrl(d);
+                }}
+              />
             </Center>
           </Bounds>
           <Environment preset="studio" />
         </Suspense>
-        <Capture
-          id={id}
-          onCaptured={(d) => {
-            writeCache(id, d);
-            setDataUrl(d);
-          }}
-        />
       </Canvas>
     </div>
   );
 }
 
-function ThumbModel({ url }: { url: string }) {
+function ThumbModel({
+  url,
+  onCaptured,
+}: {
+  url: string;
+  onCaptured: (dataUrl: string) => void;
+}) {
   const { scene } = useGLTF(url);
   const cloned = useMemo(() => scene.clone(true), [scene]);
-  return <primitive object={cloned} />;
+  // Capture lives inside Suspense — it only mounts after GLB is parsed.
+  return (
+    <>
+      <primitive object={cloned} />
+      <Capture onCaptured={onCaptured} />
+    </>
+  );
 }
 
 /**
- * After the scene has settled (a few frames of stable render), grab the
- * canvas's back-buffer and hand it up.
+ * After the GLB has mounted, wait a few frames for textures to upload and
+ * Bounds to settle the fit pass, then grab the back buffer. Reject mostly-
+ * transparent captures (means we fired too early).
  */
-function Capture({
-  id: _id,
-  onCaptured,
-}: {
-  id: string;
-  onCaptured: (dataUrl: string) => void;
-}) {
+function Capture({ onCaptured }: { onCaptured: (dataUrl: string) => void }) {
   const { gl } = useThree();
   const framesRef = useRef(0);
   const doneRef = useRef(false);
+  const attemptsRef = useRef(0);
 
   useFrame(() => {
     if (doneRef.current) return;
     framesRef.current += 1;
-    // 6 frames ≈ 100ms at 60fps — enough for GLB textures to be uploaded
-    // and Bounds to settle its fit pass.
-    if (framesRef.current < 6) return;
-    doneRef.current = true;
+    // ~16 frames ≈ 260ms — enough for one Bounds fit + texture upload after
+    // the GLB has finished parsing.
+    if (framesRef.current < 16) return;
+
     try {
       const canvas = gl.domElement as HTMLCanvasElement;
+      if (!isMostlyOpaque(canvas)) {
+        // Try again a few frames later — model may still be settling.
+        framesRef.current = 8;
+        attemptsRef.current += 1;
+        if (attemptsRef.current > 8) {
+          // Give up rather than spinning forever on a broken context.
+          doneRef.current = true;
+        }
+        return;
+      }
+      doneRef.current = true;
       const d = canvas.toDataURL('image/png');
       onCaptured(d);
     } catch {
-      /* toDataURL can throw if context is lost; we retry next mount */
+      doneRef.current = true;
     }
   });
 
-  // Kick a re-render bump at first mount (avoid stuck frameloop on static scene)
-  useEffect(() => {
-    const t = setTimeout(() => {
-      framesRef.current = Math.max(framesRef.current, 3);
-    }, 120);
-    return () => clearTimeout(t);
-  }, []);
-
   return null;
+}
+
+/** Sample a 16×16 grid; bail if fewer than 5% of samples are opaque. */
+function isMostlyOpaque(canvas: HTMLCanvasElement): boolean {
+  // Use a tiny offscreen 2D copy so we can read pixels without
+  // perturbing the WebGL pipeline.
+  const probe = document.createElement('canvas');
+  probe.width = 16;
+  probe.height = 16;
+  const ctx = probe.getContext('2d');
+  if (!ctx) return true; // assume ok if we can't probe
+  ctx.drawImage(canvas, 0, 0, 16, 16);
+  const data = ctx.getImageData(0, 0, 16, 16).data;
+  let opaque = 0;
+  for (let i = 3; i < data.length; i += 4) {
+    if ((data[i] ?? 0) > 20) opaque += 1;
+  }
+  return opaque / (data.length / 4) > 0.05;
 }

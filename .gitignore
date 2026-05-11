@@ -1,0 +1,14 @@
+node_modules/
+dist/
+
+# tsc build artifacts
+*.tsbuildinfo
+
+# OS / editor
+.DS_Store
+*.swp
+.vscode/
+.idea/
+
+# Personal notes — not for upstream
+如何复刻.md

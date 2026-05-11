@@ -1,6 +1,7 @@
 import { createContext, useContext, useReducer, ReactNode } from 'react';
 import type { Cell, Organelle } from '../types/cells';
 import { cells } from '../data/cells';
+import type { ScopeModeId } from '../data/microscopeModes';
 
 type ViewMode = 'solid' | 'layered' | 'sliced';
 
@@ -10,6 +11,7 @@ interface StudioState {
   viewMode: ViewMode;
   crossSection: boolean;
   label: boolean;
+  scopeMode: ScopeModeId;
 }
 
 type StudioAction =
@@ -18,6 +20,7 @@ type StudioAction =
   | { type: 'SET_VIEW_MODE'; mode: ViewMode }
   | { type: 'TOGGLE_CROSS_SECTION' }
   | { type: 'TOGGLE_LABEL' }
+  | { type: 'SET_SCOPE_MODE'; mode: ScopeModeId }
   | { type: 'RESET_VIEW' };
 
 const initial: StudioState = {
@@ -26,6 +29,7 @@ const initial: StudioState = {
   viewMode: 'layered',
   crossSection: true,
   label: true,
+  scopeMode: 'none',
 };
 
 function reducer(s: StudioState, a: StudioAction): StudioState {
@@ -46,8 +50,10 @@ function reducer(s: StudioState, a: StudioAction): StudioState {
       return { ...s, crossSection: !s.crossSection };
     case 'TOGGLE_LABEL':
       return { ...s, label: !s.label };
+    case 'SET_SCOPE_MODE':
+      return { ...s, scopeMode: a.mode };
     case 'RESET_VIEW':
-      return { ...s, viewMode: 'layered', crossSection: true };
+      return { ...s, viewMode: 'layered', crossSection: true, scopeMode: 'none' };
     default:
       return s;
   }

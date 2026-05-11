@@ -4,23 +4,36 @@ import { useStudio } from '../state/StudioContext';
 import { getOrganelleMock } from '../data/mockCopy';
 import { organelleImagePath } from '../three/organelleAssets';
 
-export function OrganelleDetails() {
-  const { state, dispatch, selectedOrganelle, selectedCell } = useStudio();
-  const mock = getOrganelleMock(selectedOrganelle?.id);
-  const imgSrc = selectedOrganelle
-    ? organelleImagePath(selectedCell.id, selectedOrganelle.id)
-    : null;
+export function RightColumn() {
+  const { selectedOrganelle } = useStudio();
 
   if (!selectedOrganelle) {
     return (
-      <section className="bg-white/70 rounded-xl border border-paperDark p-4 min-h-0 flex items-center justify-center text-sm text-ink/40">
-        No organelle selected
-      </section>
+      <div className="flex flex-col gap-3 min-h-0">
+        <section className="bg-white/70 rounded-xl border border-paperDark p-4 flex items-center justify-center text-sm text-ink/40">
+          No organelle selected
+        </section>
+      </div>
     );
   }
 
   return (
-    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden">
+    <div className="flex flex-col gap-3 min-h-0 overflow-y-auto">
+      <OrganelleDetailsCard />
+      <BiologicalNotesCard />
+      <WhereItOccursCard />
+    </div>
+  );
+}
+
+function OrganelleDetailsCard() {
+  const { state, dispatch, selectedOrganelle, selectedCell } = useStudio();
+  if (!selectedOrganelle) return null;
+  const mock = getOrganelleMock(selectedOrganelle.id);
+  const imgSrc = organelleImagePath(selectedCell.id, selectedOrganelle.id);
+
+  return (
+    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col overflow-hidden shrink-0">
       <header className="flex items-center justify-between px-4 py-2.5 border-b border-paperDark">
         <span className="text-[11px] font-semibold tracking-[0.2em] text-ink/50">
           ORGANELLE DETAILS
@@ -28,53 +41,73 @@ export function OrganelleDetails() {
         <Heart size={14} className="text-accent/70" fill="currentColor" />
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Mini preview + names */}
+      <div className="p-4 space-y-3">
         <div className="flex items-start gap-3">
-          <OrganelleBadge
-            src={imgSrc}
-            accent={mock.accent ?? '#7c4dff'}
-          />
+          <OrganelleBadge src={imgSrc} accent={mock.accent ?? '#7c4dff'} />
           <div className="min-w-0 pt-1">
             <div className="font-serif text-lg font-semibold text-ink truncate">
               {selectedOrganelle.nameEn}
             </div>
             <div className="text-xs italic text-ink/50 truncate">
-              {selectedOrganelle.tagline}
+              {selectedOrganelle.taglineEn ?? selectedOrganelle.tagline}
             </div>
           </div>
         </div>
 
-        {/* Attributes */}
-        <div className="text-xs text-ink/70 space-y-1.5 pt-2">
+        <div className="text-xs text-ink/70 space-y-1">
           <AttrRow label="Size" value={mock.size} />
           <AttrRow label="Location" value={mock.location} />
           <AttrRow label="Visible in LM" value={mock.visibleInLM} />
           <div className="flex items-center justify-between gap-3 py-1">
             <span className="text-ink/50">Label</span>
-            <LabelSwitch
-              on={state.label}
-              onToggle={() => dispatch({ type: 'TOGGLE_LABEL' })}
-            />
+            <div className="flex items-center gap-2">
+              <LabelSwitch
+                on={state.label}
+                onToggle={() => dispatch({ type: 'TOGGLE_LABEL' })}
+              />
+              <span
+                aria-hidden
+                className="w-2 h-2 rounded-full"
+                style={{
+                  background: state.label
+                    ? mock.accent ?? '#7c4dff'
+                    : '#d4d0c8',
+                }}
+              />
+            </div>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
 
-        {/* Biological notes */}
-        <section>
-          <div className="text-[11px] font-semibold tracking-[0.2em] text-ink/50 mb-1.5">
-            BIOLOGICAL NOTES
-          </div>
-          <p className="text-xs leading-relaxed text-ink/80">
-            {mock.biologicalNotes}
-          </p>
-        </section>
+function BiologicalNotesCard() {
+  const { selectedOrganelle } = useStudio();
+  if (!selectedOrganelle) return null;
+  const mock = getOrganelleMock(selectedOrganelle.id);
 
-        {/* Fun fact */}
-        <div className="bg-[#fdf2b8]/70 rounded-lg px-3 py-2 border border-[#e9d98a]">
-          <div className="text-[11px] text-ink font-semibold mb-0.5 italic">
-            Fun fact:
-          </div>
+  return (
+    <section className="bg-white/70 rounded-xl border border-paperDark overflow-hidden shrink-0">
+      <header className="px-4 py-2.5 border-b border-paperDark">
+        <span className="font-serif italic text-sm text-accent/80">
+          BIOLOGICAL NOTES
+        </span>
+      </header>
+
+      <div className="p-4 space-y-3">
+        <p className="text-xs leading-relaxed text-ink/80">
+          {mock.biologicalNotes}
+        </p>
+        <div className="bg-[#fdf2b8]/70 rounded-lg px-3 py-2 border border-[#e9d98a] relative">
+          <span
+            aria-hidden
+            className="absolute -top-1.5 -right-1.5 text-accent/70 text-sm"
+          >
+            ✦
+          </span>
           <p className="text-xs italic leading-relaxed text-ink/80">
+            <span className="font-semibold not-italic">Fun fact:</span>{' '}
             {mock.funFact}
           </p>
         </div>
@@ -82,6 +115,77 @@ export function OrganelleDetails() {
     </section>
   );
 }
+
+function WhereItOccursCard() {
+  const { selectedCell } = useStudio();
+  return (
+    <section className="bg-white/70 rounded-xl border border-paperDark overflow-hidden shrink-0">
+      <header className="px-4 py-2.5 border-b border-paperDark">
+        <span className="font-serif italic text-sm text-accent/80">
+          WHERE IT OCCURS
+        </span>
+      </header>
+
+      <div className="px-4 py-3">
+        <HabitatIllustration cellId={selectedCell.id} />
+      </div>
+    </section>
+  );
+}
+
+/** Watercolor habitat (tree / body / petri) + magnifier circle on the right. */
+function HabitatIllustration({ cellId }: { cellId: string }) {
+  const habitat = HABITAT[cellId] ?? HABITAT.default!;
+  return (
+    <div className="flex items-center justify-between gap-2 h-24">
+      <div className="flex-1 flex items-center justify-center text-4xl leading-none select-none">
+        <span aria-hidden>{habitat.scene}</span>
+      </div>
+      <svg viewBox="0 0 80 60" className="w-20 h-14 shrink-0">
+        <line
+          x1="14"
+          y1="30"
+          x2="34"
+          y2="30"
+          stroke="#8a9a5b"
+          strokeWidth="1"
+          strokeDasharray="2 2"
+        />
+        <circle
+          cx="56"
+          cy="30"
+          r="22"
+          fill={habitat.zoomFill}
+          stroke="#8a9a5b"
+          strokeWidth="1.2"
+        />
+        <text
+          x="56"
+          y="36"
+          textAnchor="middle"
+          fontSize="22"
+          fontFamily="serif"
+        >
+          {habitat.zoom}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+const HABITAT: Record<
+  string,
+  { scene: string; zoom: string; zoomFill: string }
+> = {
+  'plant-cell': { scene: '🌳', zoom: '🌿', zoomFill: '#e6efd8' },
+  'animal-cell': { scene: '🧍', zoom: '🟣', zoomFill: '#efe2f8' },
+  neuron: { scene: '🧠', zoom: '⚡', zoomFill: '#f3e6fa' },
+  'white-blood-cell': { scene: '🩸', zoom: '🛡️', zoomFill: '#fde4dc' },
+  'epithelial-cell': { scene: '🫁', zoom: '🧱', zoomFill: '#fbeed3' },
+  'bacterial-cell': { scene: '🧫', zoom: '🦠', zoomFill: '#dfeaf0' },
+  'muscle-cell': { scene: '💪', zoom: '💗', zoomFill: '#fde4dc' },
+  default: { scene: '🔬', zoom: '🧬', zoomFill: '#efe2f8' },
+};
 
 function OrganelleBadge({
   src,
@@ -144,3 +248,7 @@ function LabelSwitch({ on, onToggle }: { on: boolean; onToggle: () => void }) {
     </button>
   );
 }
+
+// Back-compat export — App.tsx imports OrganelleDetails. Re-export as the new
+// multi-card column so the existing import keeps working without touching App.
+export { RightColumn as OrganelleDetails };

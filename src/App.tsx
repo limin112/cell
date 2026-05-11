@@ -11,7 +11,7 @@ export default function App() {
       <div className="h-screen w-screen flex flex-col overflow-hidden bg-paper">
         <TopBar />
 
-        <main className="flex-1 min-h-0 grid grid-cols-[240px_1fr_300px] grid-rows-[1fr_auto] gap-3 p-3">
+        <main className="flex-1 min-h-0 grid grid-cols-[230px_1fr_370px] grid-rows-[1fr_auto] gap-3 p-3">
           {/* Row 1 — main panels */}
           <div className="min-h-0 flex flex-col gap-3">
             <div className="flex-1 min-h-0">

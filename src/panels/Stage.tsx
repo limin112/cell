@@ -8,6 +8,7 @@ import {
   Eye,
   Maximize2,
   Camera,
+  Cuboid,
 } from 'lucide-react';
 import { useStudio } from '../state/StudioContext';
 import type { ViewMode } from '../state/StudioContext';
@@ -15,27 +16,29 @@ import { STAGE_TIP } from '../data/mockCopy';
 import { cellAccent } from '../data/cellIcons';
 import { CellViewer } from '../three/CellViewer';
 import { cellModelUrl } from '../three/assetRegistry';
+import { scopeFilter } from '../data/microscopeModes';
 
 export function Stage() {
-  const { dispatch, selectedCell } = useStudio();
+  const { state, dispatch, selectedCell } = useStudio();
   const [resetNonce, setResetNonce] = useState(0);
   const [spinning, setSpinning] = useState(true);
   const modelUrl = cellModelUrl(selectedCell.id);
+  const filter = scopeFilter(state.scopeMode);
 
   return (
     <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden relative">
-      {/* Title */}
-      <div className="px-6 pt-4 pb-2 shrink-0">
-        <h2 className="font-serif text-4xl font-semibold text-ink leading-tight">
+      {/* Title — compact so the 3D viewport gets max height */}
+      <div className="px-6 pt-3 pb-1 shrink-0">
+        <h2 className="font-serif text-3xl font-semibold text-ink leading-tight">
           {selectedCell.nameEn}
         </h2>
-        <p className="text-sm italic text-ink/60 mt-0.5">
+        <p className="text-xs italic text-ink/60 mt-0.5">
           {kindSubtitle(selectedCell.kingdom)}
         </p>
       </div>
 
-      {/* Viewport area (placeholder) */}
-      <div className="flex-1 relative min-h-0 mx-4 mb-4 rounded-lg overflow-hidden">
+      {/* Viewport area — expanded; toolbars overlay on top */}
+      <div className="flex-1 relative min-h-0 mx-3 mb-3 rounded-lg overflow-hidden">
         <div
           className="absolute inset-0"
           style={{
@@ -57,7 +60,7 @@ export function Stage() {
 
         {/* 3D viewport — real GLB if registered, placeholder otherwise */}
         {modelUrl ? (
-          <div className="absolute inset-0">
+          <div className="absolute inset-0" style={{ filter }}>
             <CellViewer
               url={modelUrl}
               accent={cellAccent(selectedCell.id)}
@@ -66,7 +69,10 @@ export function Stage() {
             />
           </div>
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+          <div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+            style={{ filter }}
+          >
             <div
               className="w-[62%] h-[70%] rounded-[45%_55%_60%_40%/50%_60%_40%_50%] opacity-90"
               style={{
@@ -93,9 +99,10 @@ export function Stage() {
           hasModel={!!modelUrl}
         />
 
-        {/* Bottom-right screenshot button */}
-        <div className="absolute bottom-3 right-3">
+        {/* Bottom-right screenshot + 3D export */}
+        <div className="absolute bottom-3 right-3 flex items-center gap-2">
           <ToolbarButton icon={<Camera size={14} />} label="Screenshot" />
+          <ToolbarButton icon={<Cuboid size={14} />} label="3D Export" />
         </div>
       </div>
     </section>

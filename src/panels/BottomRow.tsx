@@ -1,13 +1,10 @@
 import { Info, Plus, ChevronRight } from 'lucide-react';
 import { useStudio } from '../state/StudioContext';
 import { CellThumb } from '../three/CellThumb';
+import { SCOPE_MODES, microscopeImagePath } from '../data/microscopeModes';
 
 export function MicroscopeView() {
-  const thumbs = [
-    { id: 'light', label: 'Light Microscope', hue: '#9fb26b' },
-    { id: 'stained', label: 'Stained Selection', hue: '#b46bd4' },
-    { id: 'electron', label: 'Electron Microscope', hue: '#3b3946' },
-  ];
+  const { state, dispatch, selectedCell } = useStudio();
 
   return (
     <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden">
@@ -19,17 +16,59 @@ export function MicroscopeView() {
       </header>
 
       <div className="p-3 grid grid-cols-4 gap-2 items-stretch">
-        {thumbs.map((t) => (
-          <div key={t.id} className="flex flex-col gap-1.5">
-            <div
-              className="aspect-square rounded-lg"
-              style={{
-                background: `radial-gradient(circle at 30% 30%, ${t.hue}55, ${t.hue} 75%)`,
-              }}
-            />
-            <span className="text-[10px] text-ink/60 truncate">{t.label}</span>
-          </div>
-        ))}
+        {SCOPE_MODES.map((m) => {
+          const active = state.scopeMode === m.id;
+          const plate = microscopeImagePath(selectedCell.id, m.id);
+          return (
+            <button
+              key={m.id}
+              type="button"
+              onClick={() =>
+                dispatch({
+                  type: 'SET_SCOPE_MODE',
+                  mode: active ? 'none' : m.id,
+                })
+              }
+              aria-pressed={active}
+              title={active ? `${m.label} (click to clear)` : m.label}
+              className="flex flex-col gap-1.5 text-left focus:outline-none"
+            >
+              <div
+                className={`aspect-square rounded-lg overflow-hidden relative transition ${
+                  active
+                    ? 'ring-2 ring-accent shadow-md'
+                    : 'ring-1 ring-paperDark hover:ring-ink/20'
+                }`}
+                style={{ background: m.bg }}
+              >
+                {plate ? (
+                  <img
+                    src={plate}
+                    alt=""
+                    aria-hidden
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0" style={{ filter: m.filter }}>
+                    <CellThumb
+                      id={selectedCell.id}
+                      size="fill"
+                      shape="square"
+                      border="none"
+                    />
+                  </div>
+                )}
+              </div>
+              <span
+                className={`text-[10px] truncate ${
+                  active ? 'text-accent font-medium' : 'text-ink/60'
+                }`}
+              >
+                {m.label}
+              </span>
+            </button>
+          );
+        })}
         <button className="aspect-square rounded-lg border border-dashed border-ink/20 flex flex-col items-center justify-center gap-1 text-ink/40 hover:bg-paperDark/40 transition">
           <Plus size={16} />
           <span className="text-[10px]">Add image</span>
@@ -59,7 +98,7 @@ export function CompareCells() {
           <CellChip
             id={selectedCell.id}
             name={selectedCell.nameEn}
-            sub={kindSubtitle(selectedCell.kingdom)}
+            sub="(You are here)"
           />
           <span className="text-xs font-semibold text-accent bg-accent-soft rounded-full w-7 h-7 flex items-center justify-center">
             vs

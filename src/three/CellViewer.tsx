@@ -45,7 +45,7 @@ export function CellViewer({
       <directionalLight position={[-4, 2, -2]} intensity={0.35} color={accent} />
 
       <Suspense fallback={<LoadingPlaceholder accent={accent} />}>
-        <Bounds fit clip observe margin={1.15} key={resetNonce}>
+        <Bounds fit clip observe margin={0.62} key={resetNonce}>
           <Center>
             <RotatingModel url={url} spinning={autoRotate} />
           </Center>
@@ -58,7 +58,7 @@ export function CellViewer({
         enablePan={false}
         enableDamping
         dampingFactor={0.08}
-        minDistance={1.4}
+        minDistance={0.5}
         maxDistance={8}
         rotateSpeed={0.7}
       />
