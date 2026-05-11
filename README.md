@@ -9,11 +9,9 @@ reference photos, all rendered in the browser.
 
 ## Demo
 
-<p align="center">
-  <video src="https://github.com/limin112/cell/raw/main/docs/cell-1080p.mp4" controls width="720" muted></video>
-</p>
+![Cell Architecture Studio demo](docs/cell-demo.gif)
 
-📽️ [点这里下载或在线观看 / Click to download or watch](https://github.com/limin112/cell/raw/main/docs/cell-1080p.mp4)
+📽️ 1080p 原片 / Full 1080p MP4: [docs/cell-1080p.mp4](https://github.com/limin112/cell/raw/main/docs/cell-1080p.mp4)
 
 ---
 
