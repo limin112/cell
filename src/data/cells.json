@@ -1,0 +1,135 @@
+{
+  "_meta": {
+    "schemaVersion": "0.1",
+    "updated": "2026-05-11",
+    "owner": "content-engineer",
+    "notes": [
+      "IDs are kebab-case; safe to reuse as mesh name / React key / URL slug.",
+      "tagline = Chinese one-liner (demo audience = 中小学生 per brief).",
+      "taglineEn added as a bonus for future i18n; not required.",
+      "shared: true = organelle id reusable across eukaryotic cells (same FE mesh component can render it).",
+      "shared: false = cell-type-specific; needs its own Tripo3D asset.",
+      "Counts: 7 cells; organelles per cell = 5–6 (bacteria 5). Total organelle entries = 40.",
+      "Full cell models (7) are indexed by cell.id itself; no separate entry."
+    ]
+  },
+  "cells": [
+    {
+      "id": "plant-cell",
+      "nameEn": "Plant Cell",
+      "nameZh": "植物细胞",
+      "kingdom": "eukaryote",
+      "traits": ["specialized"],
+      "tagline": "会用阳光给自己做饭的绿色工厂。",
+      "taglineEn": "The green factory that cooks its own food with sunlight.",
+      "organelles": [
+        {"id": "cell-wall",        "nameEn": "Cell Wall",        "nameZh": "细胞壁",   "shared": false, "tagline": "像给细胞穿了一身硬铠甲。",                 "taglineEn": "A rigid armor wrapped around the cell."},
+        {"id": "chloroplast",      "nameEn": "Chloroplast",      "nameZh": "叶绿体",   "shared": false, "tagline": "细胞自己的太阳能板，把阳光变成糖。",        "taglineEn": "The cell's own solar panel — turns sunlight into sugar."},
+        {"id": "central-vacuole",  "nameEn": "Central Vacuole",  "nameZh": "中央液泡", "shared": false, "tagline": "占掉大半个细胞的巨型水罐。",              "taglineEn": "A giant water tank that fills most of the cell."},
+        {"id": "nucleus",          "nameEn": "Nucleus",          "nameZh": "细胞核",   "shared": true,  "tagline": "细胞的指挥部，DNA 蓝图都在这里。",         "taglineEn": "The command center — holds the DNA blueprint."},
+        {"id": "mitochondrion",    "nameEn": "Mitochondrion",    "nameZh": "线粒体",   "shared": true,  "tagline": "把糖变成细胞能用的能量。",                  "taglineEn": "Turns sugar into usable energy."}
+      ]
+    },
+    {
+      "id": "animal-cell",
+      "nameEn": "Animal Cell",
+      "nameZh": "动物细胞",
+      "kingdom": "eukaryote",
+      "traits": [],
+      "tagline": "能屈能伸的万能细胞，你身上大部分都是它。",
+      "taglineEn": "The shape-shifting all-rounder — most of your body is made of it.",
+      "organelles": [
+        {"id": "cell-membrane",         "nameEn": "Cell Membrane",         "nameZh": "细胞膜",    "shared": true,  "tagline": "柔软的门卫，决定谁能进出。",                "taglineEn": "A flexible gatekeeper — decides what goes in and out."},
+        {"id": "nucleus",               "nameEn": "Nucleus",               "nameZh": "细胞核",    "shared": true,  "tagline": "细胞的指挥部，DNA 蓝图都在这里。",         "taglineEn": "The command center — holds the DNA blueprint."},
+        {"id": "mitochondrion",         "nameEn": "Mitochondrion",         "nameZh": "线粒体",    "shared": true,  "tagline": "细胞的充电宝，给所有活儿供电。",            "taglineEn": "The cell's power bank — fuels everything."},
+        {"id": "endoplasmic-reticulum", "nameEn": "Endoplasmic Reticulum", "nameZh": "内质网",    "shared": true,  "tagline": "像工厂的流水线，批量造蛋白质。",            "taglineEn": "Assembly lines that mass-produce proteins."},
+        {"id": "golgi-apparatus",       "nameEn": "Golgi Apparatus",       "nameZh": "高尔基体",  "shared": true,  "tagline": "细胞里的打包邮局，贴标签、发货。",          "taglineEn": "The cell's mailroom — labels and ships products out."},
+        {"id": "lysosome",              "nameEn": "Lysosome",              "nameZh": "溶酶体",    "shared": true,  "tagline": "细胞里的垃圾处理厂，分解废料。",            "taglineEn": "The recycling plant — breaks down waste."}
+      ]
+    },
+    {
+      "id": "neuron",
+      "nameEn": "Neuron",
+      "nameZh": "神经元",
+      "kingdom": "eukaryote",
+      "traits": ["specialized"],
+      "tagline": "身体里的超长通讯员，发电信号给大脑和肌肉。",
+      "taglineEn": "The super-long messenger — sends electrical signals across your body.",
+      "organelles": [
+        {"id": "soma",              "nameEn": "Soma (Cell Body)",  "nameZh": "胞体",      "shared": false, "tagline": "神经元做决定的地方。",                        "taglineEn": "Where the neuron makes its decisions."},
+        {"id": "dendrites",         "nameEn": "Dendrites",         "nameZh": "树突",      "shared": false, "tagline": "像树枝一样接收信号的小天线。",                "taglineEn": "Branch-like antennas that pick up signals."},
+        {"id": "axon",              "nameEn": "Axon",              "nameZh": "轴突",      "shared": false, "tagline": "信号高速路，最长能跨整个身体。",              "taglineEn": "The signal highway — can run across your whole body."},
+        {"id": "myelin-sheath",     "nameEn": "Myelin Sheath",     "nameZh": "髓鞘",      "shared": false, "tagline": "给轴突裹上的绝缘层，让信号跑得更快。",        "taglineEn": "Insulation around the axon — speeds up the signal."},
+        {"id": "synaptic-terminal", "nameEn": "Synaptic Terminal", "nameZh": "突触末梢",  "shared": false, "tagline": "信号的末端小口袋，把消息投给下一个细胞。",    "taglineEn": "The signal's end pocket — hands off the message to the next cell."},
+        {"id": "nucleus",           "nameEn": "Nucleus",           "nameZh": "细胞核",    "shared": true,  "tagline": "细胞的指挥部，藏在胞体里。",                  "taglineEn": "The command center — tucked inside the soma."}
+      ]
+    },
+    {
+      "id": "white-blood-cell",
+      "nameEn": "White Blood Cell",
+      "nameZh": "白细胞",
+      "kingdom": "eukaryote",
+      "traits": ["specialized", "multi-nucleated"],
+      "tagline": "身体里的巡逻保安，发现敌人就包围吞掉。",
+      "taglineEn": "Your body's patrol guard — surrounds and swallows invaders.",
+      "organelles": [
+        {"id": "lobed-nucleus",    "nameEn": "Lobed Nucleus",   "nameZh": "分叶核",    "shared": false, "tagline": "长成几瓣的细胞核，方便挤过狭窄血管。",     "taglineEn": "A multi-lobed nucleus — squeezes through tight blood vessels."},
+        {"id": "cell-membrane",    "nameEn": "Cell Membrane",   "nameZh": "细胞膜",    "shared": true,  "tagline": "能变形的软外壳，伸出爪子抓细菌。",          "taglineEn": "A stretchy outer shell — reaches out to grab bacteria."},
+        {"id": "lysosome",         "nameEn": "Lysosome",        "nameZh": "溶酶体",    "shared": true,  "tagline": "消化吞进来的敌人。",                         "taglineEn": "Digests the invaders it swallows."},
+        {"id": "mitochondrion",    "nameEn": "Mitochondrion",   "nameZh": "线粒体",    "shared": true,  "tagline": "给追击和吞噬提供能量。",                     "taglineEn": "Powers the chase and the swallow."},
+        {"id": "granules",         "nameEn": "Granules",        "nameZh": "颗粒",      "shared": false, "tagline": "细胞里的武器库，装着杀菌武器。",             "taglineEn": "An internal armory of antibacterial weapons."},
+        {"id": "pseudopod",        "nameEn": "Pseudopod",       "nameZh": "伪足",      "shared": false, "tagline": "伸出来抓东西的临时小脚。",                   "taglineEn": "Temporary 'fake feet' that reach out to grab things."}
+      ]
+    },
+    {
+      "id": "epithelial-cell",
+      "nameEn": "Epithelial Cell",
+      "nameZh": "上皮细胞",
+      "kingdom": "eukaryote",
+      "traits": ["specialized"],
+      "tagline": "身体的保鲜膜，铺满皮肤、肠道、血管内壁。",
+      "taglineEn": "Your body's cling-wrap — lines your skin, gut, and blood vessels.",
+      "organelles": [
+        {"id": "nucleus",          "nameEn": "Nucleus",          "nameZh": "细胞核",    "shared": true,  "tagline": "细胞的指挥部。",                               "taglineEn": "The command center."},
+        {"id": "cell-membrane",    "nameEn": "Cell Membrane",    "nameZh": "细胞膜",    "shared": true,  "tagline": "分出细胞内外的一层柔软边界。",                 "taglineEn": "A soft border between inside and outside."},
+        {"id": "microvilli",       "nameEn": "Microvilli",       "nameZh": "微绒毛",    "shared": false, "tagline": "表面的密集小刷子，大大扩大吸收面积。",          "taglineEn": "A dense brush of bristles that boost absorption area."},
+        {"id": "tight-junction",   "nameEn": "Tight Junction",   "nameZh": "紧密连接",  "shared": false, "tagline": "和邻居贴死的魔术贴，不让东西从缝里漏过。",       "taglineEn": "Velcro to the neighbor cell — nothing leaks through the gap."},
+        {"id": "desmosome",        "nameEn": "Desmosome",        "nameZh": "桥粒",      "shared": false, "tagline": "细胞之间的铆钉，让组织扛得住拉扯。",             "taglineEn": "Rivets between cells — lets tissue handle stretching."},
+        {"id": "mitochondrion",    "nameEn": "Mitochondrion",    "nameZh": "线粒体",    "shared": true,  "tagline": "给吸收、分泌这些活儿供电。",                    "taglineEn": "Powers absorption and secretion work."}
+      ]
+    },
+    {
+      "id": "bacterial-cell",
+      "nameEn": "Bacterial Cell",
+      "nameZh": "细菌细胞",
+      "kingdom": "prokaryote",
+      "traits": ["specialized"],
+      "tagline": "最简单的生命形式，没有真正的细胞核。",
+      "taglineEn": "The simplest living thing — no real nucleus, no fancy parts.",
+      "organelles": [
+        {"id": "nucleoid",           "nameEn": "Nucleoid",            "nameZh": "拟核区",       "shared": false, "tagline": "细菌的 DNA 就散放在这里，没有外壳包着。",    "taglineEn": "The bacterium's DNA sits loose here, no envelope."},
+        {"id": "ribosome",           "nameEn": "Ribosome",            "nameZh": "核糖体",       "shared": false, "tagline": "造蛋白质的小机器，比真核的还小一号。",         "taglineEn": "The protein-building machine — smaller than the eukaryotic kind."},
+        {"id": "bacterial-cell-wall","nameEn": "Bacterial Cell Wall", "nameZh": "细菌细胞壁",   "shared": false, "tagline": "细菌的外层硬壳，抗生素常打的靶点。",           "taglineEn": "The bacterium's hard outer shell — a common antibiotic target."},
+        {"id": "flagellum",          "nameEn": "Flagellum",           "nameZh": "鞭毛",         "shared": false, "tagline": "像小螺旋桨一样推着细菌游泳。",                 "taglineEn": "Works like a propeller — pushes the bacterium through liquid."},
+        {"id": "capsule",            "nameEn": "Capsule",             "nameZh": "荚膜",         "shared": false, "tagline": "粘粘的外衣，帮细菌黏住宿主、躲开免疫系统。",   "taglineEn": "A sticky coat — helps the bacterium stick and hide from immune cells."}
+      ]
+    },
+    {
+      "id": "muscle-cell",
+      "nameEn": "Muscle Fiber",
+      "nameZh": "肌纤维",
+      "kingdom": "eukaryote",
+      "traits": ["specialized", "multi-nucleated"],
+      "tagline": "能收缩的长条细胞，你每一次抬手都靠它。",
+      "taglineEn": "The contracting cable — every time you lift your arm, this is working.",
+      "organelles": [
+        {"id": "myofibril",              "nameEn": "Myofibril",              "nameZh": "肌原纤维",   "shared": false, "tagline": "一束束的收缩绳索，发力就靠它拉。",             "taglineEn": "Bundles of contracting ropes — the thing that actually pulls."},
+        {"id": "sarcomere",              "nameEn": "Sarcomere",              "nameZh": "肌节",       "shared": false, "tagline": "收缩的最小单元，放大看像条纹的尺子。",          "taglineEn": "The smallest contraction unit — looks like a striped ruler up close."},
+        {"id": "sarcoplasmic-reticulum", "nameEn": "Sarcoplasmic Reticulum", "nameZh": "肌浆网",     "shared": false, "tagline": "存钙离子的仓库，一放钙细胞就收缩。",            "taglineEn": "Calcium warehouse — release the calcium and the fiber contracts."},
+        {"id": "multi-nuclei",           "nameEn": "Multiple Nuclei",        "nameZh": "多个细胞核", "shared": false, "tagline": "一根肌纤维有好多个指挥部，一起发令。",           "taglineEn": "One fiber has many command centers, giving orders together."},
+        {"id": "mitochondrion",          "nameEn": "Mitochondrion",          "nameZh": "线粒体",     "shared": true,  "tagline": "肌肉里特别密，因为发力超耗能量。",              "taglineEn": "Packed densely in muscle — contraction burns a lot of energy."},
+        {"id": "sarcolemma",             "nameEn": "Sarcolemma",             "nameZh": "肌膜",       "shared": false, "tagline": "肌肉细胞特殊的外膜，传递收缩信号。",            "taglineEn": "Muscle's specialized outer membrane — carries the contraction signal."}
+      ]
+    }
+  ]
+}

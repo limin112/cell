@@ -1,0 +1,266 @@
+{
+  "_meta": {
+    "version": "phase5.v2",
+    "updated": "2026-05-11",
+    "owner": "content-engineer",
+    "schemaRef": "organelle-schema.v0.1.json",
+    "language": {
+      "size": "en",
+      "location": "en",
+      "visibleInLM": "en",
+      "biologicalNotes": "zh",
+      "funFact": "zh",
+      "note": "PM call in SH-4 in_review thread 2026-05-11: short factual fields stay EN (standard LM vocabulary, students can look up); narrative fields go ZH-native (audience = 中国中小学生, schema.tagline already ZH, avoids EN→ZH degrade). ZH narrative body lifted from artifacts/cell-studio/copy.v1.md and consolidated to a single cross-cell canonical version per shared organelle (SH-2 v2 fix)."
+    },
+    "notes": [
+      "Field contract locked with 前端工程师 in SH-4 Phase 2 thread: { size, location, visibleInLM, biologicalNotes, funFact, accent } keyed by organelle id.",
+      "v2: added 6 shared organelles (nucleus, mitochondrion, cell-membrane, endoplasmic-reticulum, golgi-apparatus, lysosome) + axon = 7 entries previously hand-filled EN in mockCopy.ts. ZH-narrative field contract now uniform across all 30 entries (23 species-specific + 7 shared). Language consistency gap caught by 前端工程师 2026-05-11 and resolved per PM option A.",
+      "Top-level keys match schema organelle.id exactly (kebab-case). 30 entries now cover the full organelle roster (23 species-specific + 6 shared + axon — axon is schema shared:false but was grouped with shared in the mockCopy.ts hand-fill, so it lives here for the single-source merge).",
+      "Shared organelles hold a single canonical ZH narrative; per-cell context differences (e.g. mitochondrion in muscle is extra dense, WBC cell-membrane deforms) belong to schema.tagline / cell-level context, NOT organelle fields. Confirmed with 前端工程师 in SH-4 attach thread 2026-05-11.",
+      "Tone/length signals inherited from the hand-filled 7: size 4–8 words, location 3–6 words, visibleInLM tri-state (Yes / No / Yes, with stain — mild variants allowed for accuracy). biologicalNotes 1–2 ZH sentences (~40–80 字); funFact 1 ZH sentence punchy.",
+      "Accent hex choices track FE's existing palette: purple #8b4fb8 (nuclei/command), terracotta #c06b4a (energy/signal/axonal), slate #6b8fa5 (membrane/boundary), amber #d9a24a (synthesis/packaging/storage), sage #6faa6f (plant/photosynthesis/wall), teal #4a9aa8 (fluid/vacuole), rose #c4708a (muscle/contraction)."
+    ]
+  },
+  "organelles": {
+    "nucleus": {
+      "size": "~5 — 10 μm",
+      "location": "Center of the cell",
+      "visibleInLM": "Yes",
+      "biologicalNotes": "细胞的指挥部。整个细胞所有的 DNA 蓝图都放在这里，决定细胞要做哪些蛋白质、什么时候分裂、什么时候休息。外面还有一层核膜，谁能进谁能出都管得很严。",
+      "funFact": "你每个细胞里的 DNA 如果拉直，长度差不多 2 米——全被塞进了直径不到 0.01 毫米的细胞核里。",
+      "accent": "#8b4fb8"
+    },
+    "mitochondrion": {
+      "size": "~0.5 — 1 μm",
+      "location": "Scattered through the cytoplasm",
+      "visibleInLM": "Yes, with stain",
+      "biologicalNotes": "细胞的能量工厂。它把糖和氧气放一起“烧”，产出细胞能直接用的能量（ATP）。哪种细胞越耗能量，线粒体就越多——肌肉、心脏和活跃的白细胞里尤其密集。",
+      "funFact": "线粒体是从妈妈那一边传下来的——你身上所有的线粒体都来自妈妈的卵细胞。",
+      "accent": "#c06b4a"
+    },
+    "cell-membrane": {
+      "size": "~7 — 10 nm thick",
+      "location": "The cell's outer boundary",
+      "visibleInLM": "No",
+      "biologicalNotes": "柔软的门卫。它由两层油性分子组成，薄得只有几纳米，但决定了谁能进细胞、谁能出去。水和氧气能自由出入，大分子得走膜上专门的“通道蛋白”。",
+      "funFact": "细胞膜其实是“流动”的——上面的蛋白质能像浮在水面的小船一样慢慢漂移。",
+      "accent": "#6b8fa5"
+    },
+    "endoplasmic-reticulum": {
+      "size": "Network spanning the cell",
+      "location": "Extending from the nuclear envelope",
+      "visibleInLM": "No",
+      "biologicalNotes": "细胞里的流水线工厂。它长得像一堆折叠起来的薄板，表面密密麻麻贴着造蛋白质的小机器（核糖体），源源不断把零件拼成完整的蛋白质，再送去高尔基体打包。",
+      "funFact": "一个普通动物细胞里，内质网的总面积比这个细胞的表面积还大几十倍——全都叠起来塞进去了。",
+      "accent": "#d9a24a"
+    },
+    "golgi-apparatus": {
+      "size": "~1 — 2 μm stack",
+      "location": "Near the nucleus and ER",
+      "visibleInLM": "No",
+      "biologicalNotes": "细胞里的打包邮局。内质网做好的蛋白质送到这里，高尔基体负责贴标签、分拣、装进小泡泡（囊泡），再发货去它们该去的地方。",
+      "funFact": "高尔基体是 1898 年意大利医生高尔基发现的——他第一次用银染色看清这个结构，还因此拿了诺贝尔奖。",
+      "accent": "#d9a24a"
+    },
+    "lysosome": {
+      "size": "~0.1 — 1 μm",
+      "location": "Scattered in the cytoplasm",
+      "visibleInLM": "Only with special stain",
+      "biologicalNotes": "细胞里的垃圾处理厂。它装满了能分解大分子的酶，专门拆掉旧的细胞器、病毒和废蛋白质，把它们变回可再利用的小零件。白细胞还靠它消化吞进来的细菌。",
+      "funFact": "如果溶酶体不小心破了，里面的酶会开始消化细胞自己——这是细胞“自杀”的方式之一。",
+      "accent": "#d9a24a"
+    },
+    "axon": {
+      "size": "1 μm — 1+ m long",
+      "location": "Extends out from the soma",
+      "visibleInLM": "Yes",
+      "biologicalNotes": "信号的高速公路。一根长长的细管，专门把电信号从胞体送出去。轴突可以很长——坐骨神经里最长的轴突能跨过人的大半个身子。",
+      "funFact": "信号在髓鞘包裹的轴突里跑得飞快，最快能到每秒 100 米——从膝盖传到大脑只要不到 0.02 秒。",
+      "accent": "#c06b4a"
+    },
+    "cell-wall": {
+      "size": "0.1 — 1 μm thick",
+      "location": "Outside the plasma membrane",
+      "visibleInLM": "Yes",
+      "biologicalNotes": "只有植物、真菌和细菌才有细胞壁，动物细胞没有。它主要由纤维素一层层交织而成，像编织袋一样又硬又有韧性，让植物茎杆能站得笔直。",
+      "funFact": "你吃的青菜嚼起来“脆脆的”声音，就是细胞壁被牙齿压破的声音。",
+      "accent": "#6faa6f"
+    },
+    "chloroplast": {
+      "size": "3 — 10 μm long",
+      "location": "Cytoplasm, near the cell surface",
+      "visibleInLM": "Yes",
+      "biologicalNotes": "细胞自己的太阳能板。里面绿色的叶绿素能抓住阳光，把空气里的二氧化碳和水拼成糖，一片叶子能这样不停地“做饭”一整个白天。",
+      "funFact": "叶绿体其实是远古时期被细胞“收编”的细菌——它到今天都保留着自己的小段 DNA。",
+      "accent": "#6faa6f"
+    },
+    "central-vacuole": {
+      "size": "Up to ~60% of cell volume",
+      "location": "Center of the plant cell",
+      "visibleInLM": "Yes",
+      "biologicalNotes": "一个巨型的水气球，能占整个植物细胞 60% 以上的空间。它帮细胞撑出形状，还顺便当仓库——储存水、养分、甚至植物自己的化学武器（辣椒的辣味就藏在这里）。",
+      "funFact": "植物缺水蔫掉，就是中央液泡瘪了；浇水以后它重新鼓起来，叶子也跟着挺回去。",
+      "accent": "#4a9aa8"
+    },
+    "soma": {
+      "size": "10 — 25 μm across",
+      "location": "Core body of the neuron",
+      "visibleInLM": "Yes",
+      "biologicalNotes": "神经元的总部。细胞核在这里，所有决策都在这里做——要不要发信号、发给谁、发多强；所有能量的生产和蛋白质的制造也都发生在这个小圆球里。",
+      "funFact": "一个胞体连接的树突和轴突加起来，长度可能是胞体自己的上千倍。",
+      "accent": "#8b4fb8"
+    },
+    "dendrites": {
+      "size": "Branches up to several hundred μm",
+      "location": "Radiating from the soma",
+      "visibleInLM": "Yes, with stain",
+      "biologicalNotes": "像一棵倒长的树，专门接收信号。一个神经元的树突上可能挂着几千个接收点，同时听来自不同地方的消息，再决定要不要把信号传下去。",
+      "funFact": "你每学会一个新东西、记住一个新单词，大脑里就有神经元长出新的树突小枝或加强已有的连接。",
+      "accent": "#c06b4a"
+    },
+    "myelin-sheath": {
+      "size": "Segments ~1 mm long",
+      "location": "Wrapped around the axon",
+      "visibleInLM": "Yes, with stain",
+      "biologicalNotes": "裹在轴突外面的一层又一层“保温膜”，让电信号跳着跑得更快、也不容易漏。多发性硬化症这种病，就是髓鞘出了问题，信号传得乱七八糟。",
+      "funFact": "婴儿刚出生时髓鞘还没发育完全，所以动作笨拙——随着髓鞘慢慢包好，孩子才能走、能跑、能画画。",
+      "accent": "#d9a24a"
+    },
+    "synaptic-terminal": {
+      "size": "~1 μm bulb",
+      "location": "Tip of the axon",
+      "visibleInLM": "With stain",
+      "biologicalNotes": "信号的末端小口袋。里面装满化学信号分子（神经递质），电信号跑到这里时口袋就打开，把分子扔进和下一个细胞之间的小缝隙里，让消息传下去。",
+      "funFact": "你大脑里一共有几百万亿个突触——比银河系的恒星还多很多。",
+      "accent": "#c06b4a"
+    },
+    "lobed-nucleus": {
+      "size": "~10 μm across, 2 — 5 lobes",
+      "location": "Central in the cell",
+      "visibleInLM": "Yes, with stain",
+      "biologicalNotes": "核被分成了几瓣，像串起来的小葡萄。这种形状让白细胞能把自己挤成很细的形状，从血管的细缝里钻出去，赶到感染发生的地方。",
+      "funFact": "医生看血涂片时，根据核分几瓣就能大致判断白细胞的“年龄”——核越多瓣通常越成熟。",
+      "accent": "#8b4fb8"
+    },
+    "granules": {
+      "size": "~0.5 μm beads",
+      "location": "Scattered in the cytoplasm",
+      "visibleInLM": "Yes, with stain",
+      "biologicalNotes": "细胞里的武器库。一颗颗小囊泡里装着各种杀菌的蛋白质和酶，白细胞抓到敌人时，这些颗粒会破开、把武器倒进敌人身上。",
+      "funFact": "不同类型的白细胞装的颗粒不一样——有的专打细菌，有的专打寄生虫，各有分工。",
+      "accent": "#d9a24a"
+    },
+    "pseudopod": {
+      "size": "Extends several μm",
+      "location": "Projects from the cell edge",
+      "visibleInLM": "Yes",
+      "biologicalNotes": "“临时长出来的小脚”。白细胞要抓东西或者往前跑时，会突然把一边的细胞膜推出去形成一条手臂，把周围的液体、细菌都包进来。",
+      "funFact": "变形虫和白细胞用的是同一招——几亿年过去了，这种抓东西的方式居然没怎么改变。",
+      "accent": "#6b8fa5"
+    },
+    "microvilli": {
+      "size": "~1 μm tall, 0.1 μm wide",
+      "location": "Apical (gut-facing) cell surface",
+      "visibleInLM": "As a fuzzy brush border",
+      "biologicalNotes": "朝外那一面上密密麻麻的小毛刷，能把细胞的表面积放大几十倍。小肠里的微绒毛就是这样，让你吃进去的营养能被高效吸收。",
+      "funFact": "如果把你小肠里所有的微绒毛都展平，总面积差不多有一个网球场那么大——全卷进了你几米长的肠子里。",
+      "accent": "#d9a24a"
+    },
+    "tight-junction": {
+      "size": "Seals ~10 nm thick",
+      "location": "Between adjacent epithelial cells, near the apex",
+      "visibleInLM": "No",
+      "biologicalNotes": "邻居细胞之间的“魔术贴”，把两层膜缝死，不留一点缝隙。这就是为什么肠道里的细菌、毒素没法从肠壁缝里漏进血液。",
+      "funFact": "食物中毒、肠道炎症很多时候不是细菌直接进入了血液，而是紧密连接被破坏了，给了它们可乘之机。",
+      "accent": "#6b8fa5"
+    },
+    "desmosome": {
+      "size": "~0.5 μm patch",
+      "location": "Lateral cell–cell contacts",
+      "visibleInLM": "No",
+      "biologicalNotes": "细胞和细胞之间的“铆钉”。你皮肤里的上皮细胞之间到处是桥粒，所以皮肤拉扯、撞击都不会散架。",
+      "funFact": "一种叫“天疱疮”的皮肤病，就是人自己的免疫系统错把桥粒当敌人攻击了——皮肤就会像被撕开一样起大泡。",
+      "accent": "#c4708a"
+    },
+    "nucleoid": {
+      "size": "Loose region ~1 μm",
+      "location": "Central cytoplasm (no membrane)",
+      "visibleInLM": "Only with special stain",
+      "biologicalNotes": "细菌的 DNA 就散放在这片区域里，没有核膜包着。所以细菌没有真正的“细胞核”——它是原核生物，比动植物的真核生物结构简单得多。",
+      "funFact": "细菌复制 DNA 和分裂只要 20 分钟——理论上一个细菌一天能变出 10 的 21 次方那么多后代（但实际上没那么快）。",
+      "accent": "#8b4fb8"
+    },
+    "ribosome": {
+      "size": "~20 nm (70S)",
+      "location": "Free in the cytoplasm",
+      "visibleInLM": "No",
+      "biologicalNotes": "造蛋白质的小机器。细菌的核糖体比动植物的小一号——很多抗生素就是专门攻击细菌的核糖体，让它造不出蛋白质死掉，又不影响你的细胞。",
+      "funFact": "你吃的一些抗生素（像红霉素）就是专门卡住细菌的核糖体——细菌停工，你自己没事。",
+      "accent": "#c06b4a"
+    },
+    "bacterial-cell-wall": {
+      "size": "10 — 80 nm thick",
+      "location": "Outside the plasma membrane",
+      "visibleInLM": "With Gram stain",
+      "biologicalNotes": "细菌外面一层硬壳，主要由一种叫“肽聚糖”的东西织成。这东西只有细菌才有——所以青霉素这种抗生素能专门拆它而不伤你的细胞。",
+      "funFact": "1928 年弗莱明发现青霉素时，看到发霉的培养皿里霉菌周围的细菌全崩了——原因就是青霉素让细菌造不出新的细胞壁，撑不住自己就散架了。",
+      "accent": "#6faa6f"
+    },
+    "flagellum": {
+      "size": "~10 μm long, 20 nm thick",
+      "location": "Extends from the cell surface",
+      "visibleInLM": "Only with stain",
+      "biologicalNotes": "像一根长尾巴，细菌靠它转起来游泳。有的细菌还能感知糖、氧气等方向，让鞭毛朝着那个方向转。",
+      "funFact": "细菌鞭毛是生物界里少见的“真正的轮子”——它连接着一台纳米级的旋转马达，能每秒转几百圈。",
+      "accent": "#c06b4a"
+    },
+    "capsule": {
+      "size": "0.2 — 10 μm thick",
+      "location": "Outermost layer, beyond the cell wall",
+      "visibleInLM": "With negative stain",
+      "biologicalNotes": "粘粘的一层外衣。帮细菌黏在你的嗓子、牙齿、肠道上，还能骗过免疫系统让它识别不出来。很多引起严重感染的细菌都有很厚的荚膜。",
+      "funFact": "引起肺炎的肺炎链球菌就靠荚膜躲避免疫——把它的荚膜做成疫苗，免疫系统就能认出它了。",
+      "accent": "#6b8fa5"
+    },
+    "myofibril": {
+      "size": "~1 μm wide, runs full fiber length",
+      "location": "Parallel bundles filling the muscle fiber",
+      "visibleInLM": "Yes",
+      "biologicalNotes": "一束束的收缩绳索。每根肌纤维里平行排着几百上千束肌原纤维，它们同时缩短，整条肌肉就发力了。",
+      "funFact": "显微镜下看骨骼肌能看到整齐的横纹——那就是成排肌原纤维上的肌节在齐刷刷地对齐。",
+      "accent": "#c4708a"
+    },
+    "sarcomere": {
+      "size": "~2 μm long at rest",
+      "location": "Repeating unit along each myofibril",
+      "visibleInLM": "Yes, as banded striations",
+      "biologicalNotes": "肌原纤维上最小的收缩单元。里面有粗细两种长条蛋白，它们相互滑进对方之间，整段就缩短了——像手指交叉然后互相推进。",
+      "funFact": "你肌肉里每缩短 1 厘米，就是几千万个肌节同时每一个缩短一丁点儿加起来的结果。",
+      "accent": "#c4708a"
+    },
+    "sarcoplasmic-reticulum": {
+      "size": "Network-wide, sleeves each myofibril",
+      "location": "Wraps around myofibrils",
+      "visibleInLM": "With stain",
+      "biologicalNotes": "包在肌原纤维外面的网状管道系统，里面存着钙离子。神经发来收缩信号时，管道瞬间释放钙，肌节立刻开始滑动；收缩结束后钙又被抽回管道。",
+      "funFact": "你肌肉抽筋，很多时候就是这套钙系统没配合好——钙没及时收回，肌节就一直死死卡着不肯松。",
+      "accent": "#d9a24a"
+    },
+    "multi-nuclei": {
+      "size": "Multiple nuclei per fiber",
+      "location": "Spread along the fiber periphery",
+      "visibleInLM": "Yes, with stain",
+      "biologicalNotes": "一条肌纤维不是只有一个核，而是有好多个（几十到几千个），沿着纤维边缘排成一排。因为肌纤维太长了，一个核根本管不过来——需要多个指挥部同时发令。",
+      "funFact": "肌纤维其实是由好多个小细胞在发育时融合成一条——多核就是这个“融合”留下的痕迹。",
+      "accent": "#8b4fb8"
+    },
+    "sarcolemma": {
+      "size": "~10 nm thick",
+      "location": "Outer boundary of the muscle fiber",
+      "visibleInLM": "No",
+      "biologicalNotes": "肌纤维专属的细胞膜。它特殊之处是有很多往内凹陷的小管（T 小管），能把神经传来的电信号快速带到肌纤维深处，让肌浆网同时放钙。",
+      "funFact": "没有 T 小管的话，肌纤维外层先收缩、内层还没动，整根就扭成麻花了——T 小管让“同步发力”成为可能。",
+      "accent": "#6b8fa5"
+    }
+  }
+}
