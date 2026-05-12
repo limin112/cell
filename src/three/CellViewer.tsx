@@ -7,7 +7,7 @@ import {
   Center,
   Bounds,
 } from '@react-three/drei';
-import type { Group } from 'three';
+import type { Group, Mesh } from 'three';
 
 type Props = {
   /** Full path under /public, e.g. "/models/plant-cell.glb" */
@@ -49,9 +49,11 @@ export function CellViewer({
       <directionalLight position={[3, 4, 5]} intensity={0.9} castShadow />
       <directionalLight position={[-4, 2, -2]} intensity={0.35} color={accent} />
 
-      {/* fallback=null so startTransition can keep the previous cell on screen
-          while the new GLB loads, instead of flashing a placeholder ball. */}
-      <Suspense fallback={null}>
+      {/* fallback is a soft pulsing bubble in the cell's accent color so
+          the user sees *something* the moment the Canvas mounts, instead
+          of a blank scene while a multi-MB GLB downloads. Swap is
+          seamless because both sit at the same world origin. */}
+      <Suspense fallback={<PlaceholderBubble color={accent} />}>
         {/* observe is intentionally OFF — on mobile the container can resize
             mid-frame (toolbar collapse, keyboard, etc.) and a live refit
             jerks the camera, reading as a flicker. Reset View bumps the
@@ -95,6 +97,32 @@ function RotatingModel({ url, spinning }: { url: string; spinning: boolean }) {
     <group ref={ref}>
       <primitive object={cloned} />
     </group>
+  );
+}
+
+/** Pulsing watercolor bubble shown while the real GLB streams in.
+ *  Lives inside Suspense fallback so it appears the instant Canvas mounts. */
+function PlaceholderBubble({ color }: { color: string }) {
+  const ref = useRef<Mesh>(null);
+  useFrame((state) => {
+    if (!ref.current) return;
+    ref.current.rotation.y += 0.006;
+    const t = state.clock.elapsedTime;
+    ref.current.scale.setScalar(1 + Math.sin(t * 1.8) * 0.05);
+  });
+  return (
+    <mesh ref={ref}>
+      <sphereGeometry args={[0.9, 48, 48]} />
+      <meshStandardMaterial
+        color={color}
+        roughness={0.65}
+        metalness={0.05}
+        emissive={color}
+        emissiveIntensity={0.18}
+        transparent
+        opacity={0.85}
+      />
+    </mesh>
   );
 }
 
