@@ -48,20 +48,18 @@ export function Stage() {
           }}
         />
 
-        {/* Sticky tip — desktop mouse hints. Hidden on touch / small screens
-            (pinch + drag already feels natural in OrbitControls). */}
-        <div className="hidden md:block absolute top-4 left-4 max-w-[180px] px-3 py-2 bg-[#fdf2b8] text-ink text-xs font-serif leading-relaxed rotate-[-2deg] shadow-sm">
+        {/* Sticky tip — desktop mouse hints. Mobile hides all stage overlays
+            so the 3D model owns the whole viewport. */}
+        <div className="hidden lg:block absolute top-4 left-4 max-w-[180px] px-3 py-2 bg-[#fdf2b8] text-ink text-xs font-serif leading-relaxed rotate-[-2deg] shadow-sm">
           <pre className="whitespace-pre-wrap font-serif italic">
             {STAGE_TIP}
           </pre>
         </div>
-        {/* Tiny touch hint for phones / tablets */}
-        <div className="md:hidden absolute top-3 left-3 px-2 py-1 bg-[#fdf2b8]/90 text-ink text-[10px] font-serif italic rounded shadow-sm">
-          Drag · Pinch to zoom
-        </div>
 
-        {/* VIEW MODE + Cross-Section (top-right) */}
-        <ViewModeChip />
+        {/* VIEW MODE + Cross-Section (top-right) — desktop only */}
+        <div className="hidden lg:block">
+          <ViewModeChip />
+        </div>
 
         {/* 3D viewport — real GLB if registered, placeholder otherwise */}
         {modelUrl ? (
@@ -96,21 +94,21 @@ export function Stage() {
           </div>
         )}
 
-        {/* Bottom-left toolbar */}
-        <StageToolbar
-          onReset={() => {
-            dispatch({ type: 'RESET_VIEW' });
-            setResetNonce((n) => n + 1);
-          }}
-          onToggleRotate={() => setSpinning((s) => !s)}
-          spinning={spinning}
-          hasModel={!!modelUrl}
-        />
-
-        {/* Bottom-right screenshot + 3D export */}
-        <div className="absolute bottom-3 right-3 flex items-center gap-2">
-          <ToolbarButton icon={<Camera size={14} />} label="Screenshot" />
-          <ToolbarButton icon={<Cuboid size={14} />} label="3D Export" />
+        {/* Bottom toolbars — desktop only, mobile keeps the canvas clean */}
+        <div className="hidden lg:contents">
+          <StageToolbar
+            onReset={() => {
+              dispatch({ type: 'RESET_VIEW' });
+              setResetNonce((n) => n + 1);
+            }}
+            onToggleRotate={() => setSpinning((s) => !s)}
+            spinning={spinning}
+            hasModel={!!modelUrl}
+          />
+          <div className="absolute bottom-3 right-3 flex items-center gap-2">
+            <ToolbarButton icon={<Camera size={14} />} label="Screenshot" />
+            <ToolbarButton icon={<Cuboid size={14} />} label="3D Export" />
+          </div>
         </div>
       </div>
     </section>

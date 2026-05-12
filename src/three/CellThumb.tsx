@@ -14,6 +14,10 @@ type Props = {
   shape?: 'circle' | 'square';
   /** Override border; pass 'none' to drop the accent ring entirely. */
   border?: string | 'none';
+  /** Skip the live GLB render. Use on mobile lists to avoid exceeding the
+   *  per-page WebGL context limit (iOS Safari caps at 8). Falls back to the
+   *  emoji icon path. */
+  noCanvas?: boolean;
 };
 
 const SS_PREFIX = 'cell-thumb:v2:';
@@ -47,8 +51,9 @@ export function CellThumb({
   className = '',
   shape = 'circle',
   border,
+  noCanvas = false,
 }: Props) {
-  const url = cellModelUrl(id);
+  const url = noCanvas ? null : cellModelUrl(id);
   const [dataUrl, setDataUrl] = useState<string | null>(() => readCache(id));
   // useState's initializer only runs on the first mount — when `id` changes
   // (e.g. a CellThumb reused inside MicroscopeView as the selected cell flips),
@@ -65,6 +70,18 @@ export function CellThumb({
     ? { width: '100%', height: '100%', border: borderStyle }
     : { width: size, height: size, border: borderStyle };
 
+  // Cached snapshot wins regardless of noCanvas — it's a static img, no WebGL.
+  if (dataUrl) {
+    return (
+      <img
+        src={dataUrl}
+        alt=""
+        className={`${radiusClass} bg-white shrink-0 object-cover ${className}`}
+        style={boxStyle}
+      />
+    );
+  }
+
   if (!url) {
     return (
       <span
@@ -77,17 +94,6 @@ export function CellThumb({
       >
         {cellIcon(id)}
       </span>
-    );
-  }
-
-  if (dataUrl) {
-    return (
-      <img
-        src={dataUrl}
-        alt=""
-        className={`${radiusClass} bg-white shrink-0 object-cover ${className}`}
-        style={boxStyle}
-      />
     );
   }
 

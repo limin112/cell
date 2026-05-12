@@ -76,7 +76,7 @@ function MobileCellStrip() {
                 active ? 'bg-[#e6efd8] ring-1 ring-olive/30' : ''
               }`}
             >
-              <CellThumb id={c.id} size={44} shape="square" />
+              <CellThumb id={c.id} size={44} shape="square" noCanvas />
               <span
                 className={`text-[10px] leading-tight max-w-[68px] truncate ${
                   active ? 'text-ink font-medium' : 'text-ink/60'
