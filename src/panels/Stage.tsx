@@ -28,8 +28,8 @@ export function Stage() {
   return (
     <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden relative">
       {/* Title — compact so the 3D viewport gets max height */}
-      <div key={selectedCell.id} className="px-6 pt-3 pb-1 shrink-0 fade-rise">
-        <h2 className="font-serif text-3xl font-semibold text-ink leading-tight">
+      <div key={selectedCell.id} className="px-4 sm:px-6 pt-2 sm:pt-3 pb-1 shrink-0 fade-rise">
+        <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink leading-tight">
           {selectedCell.nameEn}
         </h2>
         <p className="text-xs italic text-ink/60 mt-0.5">
@@ -48,11 +48,16 @@ export function Stage() {
           }}
         />
 
-        {/* Drei-Html-like sticky tip (Phase 3 will move it into <Html> inside the Canvas) */}
-        <div className="absolute top-4 left-4 max-w-[180px] px-3 py-2 bg-[#fdf2b8] text-ink text-xs font-serif leading-relaxed rotate-[-2deg] shadow-sm">
+        {/* Sticky tip — desktop mouse hints. Hidden on touch / small screens
+            (pinch + drag already feels natural in OrbitControls). */}
+        <div className="hidden md:block absolute top-4 left-4 max-w-[180px] px-3 py-2 bg-[#fdf2b8] text-ink text-xs font-serif leading-relaxed rotate-[-2deg] shadow-sm">
           <pre className="whitespace-pre-wrap font-serif italic">
             {STAGE_TIP}
           </pre>
+        </div>
+        {/* Tiny touch hint for phones / tablets */}
+        <div className="md:hidden absolute top-3 left-3 px-2 py-1 bg-[#fdf2b8]/90 text-ink text-[10px] font-serif italic rounded shadow-sm">
+          Drag · Pinch to zoom
         </div>
 
         {/* VIEW MODE + Cross-Section (top-right) */}
