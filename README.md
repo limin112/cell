@@ -1,5 +1,15 @@
 # Cell Architecture Studio
 
+<p align="center">
+  <a href="https://limin112.github.io/cell/">
+    <img alt="Live Demo · 在线体验" src="https://img.shields.io/badge/▶%20Live%20Demo%20·%20在线体验-7c4dff?style=for-the-badge&labelColor=24292e" />
+  </a>
+</p>
+
+<p align="center">
+  <b>🔬 <a href="https://limin112.github.io/cell/">https://limin112.github.io/cell/</a></b>
+</p>
+
 互动式 3D 细胞生物学探索器,面向中国小学 / 初中学生。
 七种细胞类型,二十九种细胞器,真实显微镜参考照片,全部在浏览器里渲染。
 
