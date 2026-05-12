@@ -8,6 +8,7 @@ import {
   Bounds,
 } from '@react-three/drei';
 import type { Group } from 'three';
+import { CELL_MODEL_URL } from './assetRegistry';
 
 type Props = {
   /** Full path under /public, e.g. "/models/plant-cell.glb" */
@@ -89,9 +90,8 @@ function RotatingModel({ url, spinning }: { url: string; spinning: boolean }) {
   );
 }
 
-// Prefetch hints for drei's loader cache (registered cells only).
-useGLTF.preload('/models/plant-cell.glb');
-useGLTF.preload('/models/animal-cell.glb');
-useGLTF.preload('/models/neuron.glb');
-useGLTF.preload('/models/white-blood-cell.glb');
-useGLTF.preload('/models/muscle-cell.glb');
+// Prefetch hints for drei's loader cache. Pull paths from the registry so
+// the BASE_URL prefix is applied consistently in all environments.
+for (const url of Object.values(CELL_MODEL_URL)) {
+  useGLTF.preload(url);
+}

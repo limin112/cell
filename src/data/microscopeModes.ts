@@ -45,6 +45,6 @@ export function microscopeImagePath(
   mode: Exclude<ScopeModeId, 'none'>
 ): string | null {
   if (!HAS_PLATE.has(cellId)) return null;
-  return `/microscope/${cellId}/${mode}.png`;
+  return `${import.meta.env.BASE_URL}microscope/${cellId}/${mode}.png`;
 }
 

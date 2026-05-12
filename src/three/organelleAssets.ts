@@ -36,6 +36,8 @@ const HAS_SHEET: Set<string> = new Set<string>([
   'muscle-cell',
 ]);
 
+const BASE = import.meta.env.BASE_URL;
+
 export function organelleImagePath(
   cellId: string,
   organelleId: string
@@ -43,11 +45,11 @@ export function organelleImagePath(
   if (SHARED_IDS.has(organelleId)) {
     // Canonical shared rendering requires the animal-cell sheet to be present.
     return HAS_SHEET.has('animal-cell')
-      ? `/organelles/_shared/${organelleId}.png`
+      ? `${BASE}organelles/_shared/${organelleId}.png`
       : null;
   }
   if (!HAS_SHEET.has(cellId)) return null;
-  return `/organelles/${cellId}/${organelleId}.png`;
+  return `${BASE}organelles/${cellId}/${organelleId}.png`;
 }
 
 export function markSheetAvailable(cellId: string): void {
