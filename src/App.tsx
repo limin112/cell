@@ -53,18 +53,26 @@ function SocialLinks() {
         />
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 relative">
+        {/* Pointing finger nudging the eye toward the X button */}
+        <span
+          aria-hidden
+          className="absolute -left-10 top-1/2 -translate-y-1/2 text-3xl pointer-events-none animate-point select-none"
+        >
+          👉
+        </span>
+
         <a
-          href="https://github.com/limin112"
+          href="https://github.com/limin112/cell"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Follow on GitHub"
-          title="github.com/limin112"
+          aria-label="Star on GitHub"
+          title="github.com/limin112/cell"
           className="group flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#24292e] text-white text-xs font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:bg-black transition-all"
         >
           <GitHubIcon size={16} />
-          <span className="font-semibold tracking-wide">GitHub</span>
-          <span className="text-white/70 group-hover:text-white">@limin112</span>
+          <span className="font-semibold tracking-wide">Star</span>
+          <span className="text-white/70 group-hover:text-white">limin112/cell</span>
         </a>
         <a
           href="https://x.com/MinLiBuilds"
@@ -72,7 +80,7 @@ function SocialLinks() {
           rel="noopener noreferrer"
           aria-label="Follow on X"
           title="x.com/MinLiBuilds"
-          className="group flex items-center gap-2 px-3.5 py-2 rounded-full bg-black text-white text-xs font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:bg-[#1a1a1a] transition-all relative"
+          className="group flex items-center gap-2 px-3.5 py-2 rounded-full bg-black text-white text-xs font-medium animate-breathe hover:bg-[#1a1a1a] transition-colors relative"
         >
           <XIcon size={13} />
           <span className="font-semibold tracking-wide">Follow</span>

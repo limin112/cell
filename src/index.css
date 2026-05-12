@@ -23,3 +23,33 @@ body {
 .soft-fade {
   animation: soft-fade 220ms ease-out both;
 }
+
+/* Pointing finger that nudges horizontally toward the follow CTA. */
+@keyframes point-nudge {
+  0%, 100% { transform: translateY(-50%) translateX(0) rotate(-8deg); }
+  50%      { transform: translateY(-50%) translateX(8px) rotate(0deg); }
+}
+.animate-point {
+  animation: point-nudge 0.9s ease-in-out infinite;
+}
+
+/* Slow breathing pulse for the X follow button — irresistible. */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18), 0 0 0 0 rgba(124, 77, 255, 0.45);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28), 0 0 0 8px rgba(124, 77, 255, 0);
+  }
+}
+.animate-breathe {
+  animation: breathe 2.2s ease-in-out infinite;
+  transform-origin: center;
+}
+/* Pause the breathing on hover so the button is steady when the user
+   actually approaches it — feels less twitchy. */
+.animate-breathe:hover {
+  animation-play-state: paused;
+}
