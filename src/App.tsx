@@ -42,27 +42,48 @@ export default function App() {
 
 function SocialLinks() {
   return (
-    <div className="fixed bottom-3 right-3 z-50 flex items-center gap-2">
-      <a
-        href="https://github.com/limin112"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="GitHub"
-        title="GitHub @limin112"
-        className="w-9 h-9 rounded-full bg-white/80 border border-paperDark shadow-sm flex items-center justify-center text-ink/70 hover:text-ink hover:bg-white transition backdrop-blur"
-      >
-        <GitHubIcon size={16} />
-      </a>
-      <a
-        href="https://x.com/MinLiBuilds"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="X (Twitter)"
-        title="X @MinLiBuilds"
-        className="w-9 h-9 rounded-full bg-white/80 border border-paperDark shadow-sm flex items-center justify-center text-ink/70 hover:text-ink hover:bg-white transition backdrop-blur"
-      >
-        <XIcon size={14} />
-      </a>
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
+      {/* Hand-written sticky note pointing at the follow buttons */}
+      <div className="bg-[#fdf2b8] text-ink text-xs font-serif italic px-3 py-1.5 rounded-md shadow-md rotate-[-3deg] border border-[#e9d98a]/60 relative">
+        <span aria-hidden className="mr-1">👋</span>
+        Like it? Follow me!
+        <span
+          aria-hidden
+          className="absolute -bottom-1.5 right-6 w-3 h-3 bg-[#fdf2b8] border-r border-b border-[#e9d98a]/60 rotate-45"
+        />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <a
+          href="https://github.com/limin112"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Follow on GitHub"
+          title="github.com/limin112"
+          className="group flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#24292e] text-white text-xs font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:bg-black transition-all"
+        >
+          <GitHubIcon size={16} />
+          <span className="font-semibold tracking-wide">GitHub</span>
+          <span className="text-white/70 group-hover:text-white">@limin112</span>
+        </a>
+        <a
+          href="https://x.com/MinLiBuilds"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Follow on X"
+          title="x.com/MinLiBuilds"
+          className="group flex items-center gap-2 px-3.5 py-2 rounded-full bg-black text-white text-xs font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:bg-[#1a1a1a] transition-all relative"
+        >
+          <XIcon size={13} />
+          <span className="font-semibold tracking-wide">Follow</span>
+          <span className="text-white/70 group-hover:text-white">@MinLiBuilds</span>
+          {/* Tiny pulse dot to draw the eye */}
+          <span
+            aria-hidden
+            className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-accent ring-2 ring-paper animate-pulse"
+          />
+        </a>
+      </div>
     </div>
   );
 }
