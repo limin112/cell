@@ -18,6 +18,10 @@ type Props = {
   autoRotate?: boolean;
   /** Signals from Stage to reset orbit controls. */
   resetNonce?: number;
+  /** Bounds margin override — smaller = tighter fit (more zoomed in).
+   *  Portrait viewports want a smaller value because the auto-fit reserves
+   *  whitespace on the long axis. */
+  margin?: number;
 };
 
 /** 3D viewer for a cell GLB.
@@ -30,6 +34,7 @@ export function CellViewer({
   accent = '#7c4dff',
   autoRotate = true,
   resetNonce = 0,
+  margin = 0.62,
 }: Props) {
   return (
     <Canvas
@@ -51,7 +56,7 @@ export function CellViewer({
             mid-frame (toolbar collapse, keyboard, etc.) and a live refit
             jerks the camera, reading as a flicker. Reset View bumps the
             key to trigger a manual refit when the user asks. */}
-        <Bounds fit clip margin={0.62} key={resetNonce}>
+        <Bounds fit clip margin={margin} key={resetNonce}>
           <Center>
             <RotatingModel url={url} spinning={autoRotate} />
           </Center>

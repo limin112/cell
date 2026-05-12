@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useProgress } from '@react-three/drei';
 import {
   Box,
   Layers,
@@ -32,6 +33,10 @@ export function Stage() {
   const [spinning, setSpinning] = useState(true);
   const modelUrl = cellModelUrl(selectedCell.id);
   const filter = scopeFilter(state.scopeMode);
+  const isMobile = useIsMobileViewport();
+  // Portrait phones reserve a lot of vertical whitespace when Bounds fits
+  // a wide-ish bbox; a tighter margin makes the cell fill more of the screen.
+  const boundsMargin = isMobile ? 0.42 : 0.62;
 
   return (
     <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden relative flex-1">
@@ -86,8 +91,10 @@ export function Stage() {
                 accent={cellAccent(selectedCell.id)}
                 autoRotate={spinning}
                 resetNonce={resetNonce}
+                margin={boundsMargin}
               />
             </WebGLBoundary>
+            <GLBLoader accent={cellAccent(selectedCell.id)} />
           </div>
         ) : modelUrl && !WEBGL_OK ? (
           <UnsupportedHint accent={cellAccent(selectedCell.id)} />
@@ -248,6 +255,46 @@ function Switch({ on, onToggle }: { on: boolean; onToggle: () => void }) {
 
 function kindSubtitle(k: string): string {
   return k === 'prokaryote' ? 'Prokaryotic Cell' : 'Eukaryotic Cell';
+}
+
+/** Watches drei's global loader manager. Renders a soft overlay while
+ *  any GLB / texture is being fetched so the user sees something moving
+ *  instead of a blank cream rectangle. */
+function GLBLoader({ accent }: { accent: string }) {
+  const { active, progress } = useProgress();
+  if (!active) return null;
+  return (
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      <div className="flex flex-col items-center gap-3 bg-white/70 backdrop-blur-sm rounded-2xl px-5 py-4 shadow-sm soft-fade">
+        <div
+          className="w-10 h-10 rounded-full border-[3px] animate-spin"
+          style={{
+            borderColor: `${accent}30`,
+            borderTopColor: accent,
+          }}
+        />
+        <span className="text-[11px] tracking-wider text-ink/60 font-serif italic">
+          Loading {Math.round(progress)}%
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/** matchMedia hook — true while viewport is under the lg breakpoint (1024px).
+ *  Reactive to resize / orientation change. */
+function useIsMobileViewport() {
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== 'undefined' &&
+    window.matchMedia('(max-width: 1023px)').matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)');
+    const handler = (e: MediaQueryListEvent) => setMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  return mobile;
 }
 
 /** Shown when WebGL is unavailable or the GLB fails to load — typical
