@@ -41,7 +41,10 @@ function OrganelleDetailsCard() {
         <Heart size={14} className="text-accent/70" fill="currentColor" />
       </header>
 
-      <div className="p-4 space-y-3">
+      <div
+        key={`${selectedCell.id}:${selectedOrganelle.id}`}
+        className="p-4 space-y-3 fade-rise"
+      >
         <div className="flex items-start gap-3">
           <OrganelleBadge src={imgSrc} accent={mock.accent ?? '#7c4dff'} />
           <div className="min-w-0 pt-1">
@@ -95,7 +98,7 @@ function BiologicalNotesCard() {
         </span>
       </header>
 
-      <div className="p-4 space-y-3">
+      <div key={selectedOrganelle.id} className="p-4 space-y-3 fade-rise">
         <p className="text-xs leading-relaxed text-ink/80">
           {mock.biologicalNotes}
         </p>
@@ -137,33 +140,33 @@ function WhereItOccursCard() {
 function HabitatIllustration({ cellId }: { cellId: string }) {
   const habitat = HABITAT[cellId] ?? HABITAT.default!;
   return (
-    <div className="flex items-center justify-between gap-2 h-24">
-      <div className="flex-1 flex items-center justify-center text-4xl leading-none select-none">
+    <div className="flex items-center justify-between gap-3 h-40 px-2">
+      <div className="flex-1 flex items-center justify-center text-7xl leading-none select-none">
         <span aria-hidden>{habitat.scene}</span>
       </div>
-      <svg viewBox="0 0 80 60" className="w-20 h-14 shrink-0">
+      <svg viewBox="0 0 100 80" className="w-32 h-24 shrink-0">
         <line
-          x1="14"
-          y1="30"
-          x2="34"
-          y2="30"
+          x1="6"
+          y1="40"
+          x2="40"
+          y2="40"
           stroke="#8a9a5b"
-          strokeWidth="1"
-          strokeDasharray="2 2"
+          strokeWidth="1.5"
+          strokeDasharray="3 3"
         />
         <circle
-          cx="56"
-          cy="30"
-          r="22"
+          cx="68"
+          cy="40"
+          r="30"
           fill={habitat.zoomFill}
           stroke="#8a9a5b"
-          strokeWidth="1.2"
+          strokeWidth="1.5"
         />
         <text
-          x="56"
-          y="36"
+          x="68"
+          y="50"
           textAnchor="middle"
-          fontSize="22"
+          fontSize="32"
           fontFamily="serif"
         >
           {habitat.zoom}

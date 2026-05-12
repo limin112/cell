@@ -25,11 +25,11 @@ export default function App() {
             <OrganelleDetails />
           </div>
 
-          {/* Row 2 — bottom row under left + center */}
-          <div className="min-h-[220px]">
+          {/* Row 2 — bottom row under left + center (compact, gives Stage more height) */}
+          <div className="min-h-[170px] max-h-[200px]">
             <OrganellesPanel />
           </div>
-          <div className="grid grid-cols-2 gap-3 min-h-[220px]">
+          <div className="grid grid-cols-2 gap-3 min-h-[170px] max-h-[200px]">
             <MicroscopeView />
             <CompareCells />
           </div>

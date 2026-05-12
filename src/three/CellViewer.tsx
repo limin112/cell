@@ -44,7 +44,9 @@ export function CellViewer({
       <directionalLight position={[3, 4, 5]} intensity={0.9} castShadow />
       <directionalLight position={[-4, 2, -2]} intensity={0.35} color={accent} />
 
-      <Suspense fallback={<LoadingPlaceholder accent={accent} />}>
+      {/* fallback=null so startTransition can keep the previous cell on screen
+          while the new GLB loads, instead of flashing a placeholder ball. */}
+      <Suspense fallback={null}>
         <Bounds fit clip observe margin={0.62} key={resetNonce}>
           <Center>
             <RotatingModel url={url} spinning={autoRotate} />
@@ -84,15 +86,6 @@ function RotatingModel({ url, spinning }: { url: string; spinning: boolean }) {
     <group ref={ref}>
       <primitive object={cloned} />
     </group>
-  );
-}
-
-function LoadingPlaceholder({ accent }: { accent: string }) {
-  return (
-    <mesh>
-      <sphereGeometry args={[0.9, 32, 32]} />
-      <meshStandardMaterial color={accent} roughness={0.6} metalness={0.05} />
-    </mesh>
   );
 }
 

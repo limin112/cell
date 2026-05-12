@@ -1,7 +1,9 @@
+import { startTransition } from 'react';
 import { ChevronDown, Star } from 'lucide-react';
 import { useStudio } from '../state/StudioContext';
 import { CellThumb } from '../three/CellThumb';
 import { cellAccent } from '../data/cellIcons';
+import { organelleImagePath } from '../three/organelleAssets';
 
 // Cells whose 3D models haven't shipped yet — collapse into a single Todo
 // placeholder at the bottom of the list instead of stranding them as
@@ -31,7 +33,11 @@ export function CellTypesPanel() {
           return (
             <li key={c.id} className="px-2">
               <button
-                onClick={() => dispatch({ type: 'SELECT_CELL', id: c.id })}
+                onClick={() =>
+                  startTransition(() =>
+                    dispatch({ type: 'SELECT_CELL', id: c.id })
+                  )
+                }
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition text-left ${
                   active
                     ? 'bg-[#e6efd8] border border-olive/30'
@@ -110,23 +116,42 @@ export function OrganellesPanel() {
       <ul className="flex-1 overflow-y-auto py-2 px-3 space-y-0.5">
         {selectedCell.organelles.map((o, idx) => {
           const active = o.id === state.selectedOrganelleId;
-          // Slight hue variation per organelle so the dot column reads as
-          // categorical labels rather than a single color.
+          const img = organelleImagePath(selectedCell.id, o.id);
+          // Per-organelle hue fallback when no PNG is registered yet.
           const dot = active ? accent : tintForIndex(accent, idx);
           return (
             <li key={o.id}>
               <button
-                onClick={() => dispatch({ type: 'SELECT_ORGANELLE', id: o.id })}
+                onClick={() =>
+                  startTransition(() =>
+                    dispatch({ type: 'SELECT_ORGANELLE', id: o.id })
+                  )
+                }
                 className={`w-full flex items-center gap-2.5 px-2 py-1.5 rounded-md text-left transition ${
                   active ? 'bg-accent-soft' : 'hover:bg-paperDark/50'
                 }`}
               >
-                <span
-                  className={`w-2.5 h-2.5 rounded-full shrink-0 ${
-                    active ? 'ring-2 ring-accent/30 ring-offset-1 ring-offset-white' : ''
-                  }`}
-                  style={{ background: dot }}
-                />
+                {img ? (
+                  <img
+                    src={img}
+                    alt=""
+                    aria-hidden
+                    className={`w-7 h-7 rounded-md object-cover shrink-0 bg-white transition ${
+                      active
+                        ? 'ring-2 ring-accent/50'
+                        : 'ring-1 ring-paperDark'
+                    }`}
+                  />
+                ) : (
+                  <span
+                    className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+                      active
+                        ? 'ring-2 ring-accent/30 ring-offset-1 ring-offset-white'
+                        : ''
+                    }`}
+                    style={{ background: dot }}
+                  />
+                )}
                 <span
                   className={`text-sm truncate ${
                     active ? 'text-ink font-medium' : 'text-ink/80'

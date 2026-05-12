@@ -1,3 +1,4 @@
+import { startTransition } from 'react';
 import { Info, Plus, ChevronRight } from 'lucide-react';
 import { useStudio } from '../state/StudioContext';
 import { CellThumb } from '../three/CellThumb';
@@ -24,10 +25,12 @@ export function MicroscopeView() {
               key={m.id}
               type="button"
               onClick={() =>
-                dispatch({
-                  type: 'SET_SCOPE_MODE',
-                  mode: active ? 'none' : m.id,
-                })
+                startTransition(() =>
+                  dispatch({
+                    type: 'SET_SCOPE_MODE',
+                    mode: active ? 'none' : m.id,
+                  })
+                )
               }
               aria-pressed={active}
               title={active ? `${m.label} (click to clear)` : m.label}

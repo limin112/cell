@@ -28,7 +28,7 @@ export function Stage() {
   return (
     <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden relative">
       {/* Title — compact so the 3D viewport gets max height */}
-      <div className="px-6 pt-3 pb-1 shrink-0">
+      <div key={selectedCell.id} className="px-6 pt-3 pb-1 shrink-0 fade-rise">
         <h2 className="font-serif text-3xl font-semibold text-ink leading-tight">
           {selectedCell.nameEn}
         </h2>
@@ -38,7 +38,7 @@ export function Stage() {
       </div>
 
       {/* Viewport area — expanded; toolbars overlay on top */}
-      <div className="flex-1 relative min-h-0 mx-3 mb-3 rounded-lg overflow-hidden">
+      <div className="flex-1 relative min-h-0 mx-3 mb-3 rounded-lg overflow-hidden transition-all duration-300 ease-out">
         <div
           className="absolute inset-0"
           style={{
@@ -60,7 +60,10 @@ export function Stage() {
 
         {/* 3D viewport — real GLB if registered, placeholder otherwise */}
         {modelUrl ? (
-          <div className="absolute inset-0" style={{ filter }}>
+          <div
+            className="absolute inset-0 transition-[filter] duration-300 ease-out"
+            style={{ filter }}
+          >
             <CellViewer
               url={modelUrl}
               accent={cellAccent(selectedCell.id)}
