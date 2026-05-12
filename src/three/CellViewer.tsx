@@ -48,7 +48,11 @@ export function CellViewer({
       {/* fallback=null so startTransition can keep the previous cell on screen
           while the new GLB loads, instead of flashing a placeholder ball. */}
       <Suspense fallback={null}>
-        <Bounds fit clip observe margin={0.62} key={resetNonce}>
+        {/* observe is intentionally OFF — on mobile the container can resize
+            mid-frame (toolbar collapse, keyboard, etc.) and a live refit
+            jerks the camera, reading as a flicker. Reset View bumps the
+            key to trigger a manual refit when the user asks. */}
+        <Bounds fit clip margin={0.62} key={resetNonce}>
           <Center>
             <RotatingModel url={url} spinning={autoRotate} />
           </Center>

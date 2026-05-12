@@ -11,11 +11,12 @@ export default function App() {
   return (
     <StudioProvider>
       {/*
-        100dvh = dynamic viewport, doesn't jitter when mobile browsers
-        collapse / expand their address bar — fixes the 'page keeps
-        refreshing' loop when Canvas resize re-triggers vh layout.
+        100svh = small viewport height — stays at the *minimum* visible
+        height (toolbar expanded). Doesn't grow/shrink when mobile
+        browser toolbar slides away on scroll, so the Canvas size stays
+        rock steady. Falls back to 100vh on browsers without svh support.
       */}
-      <div className="h-[100dvh] w-screen flex flex-col overflow-hidden bg-paper relative">
+      <div className="h-screen h-[100svh] w-screen flex flex-col overflow-hidden bg-paper relative">
         <TopBar />
         <SocialLinks />
 

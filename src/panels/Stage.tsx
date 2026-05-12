@@ -38,13 +38,14 @@ export function Stage() {
       </div>
 
       {/* Viewport area — expanded; toolbars overlay on top */}
-      <div className="flex-1 relative min-h-0 mx-3 mb-3 rounded-lg overflow-hidden transition-all duration-300 ease-out">
+      <div className="flex-1 relative min-h-0 mx-3 mb-3 rounded-lg overflow-hidden">
+        {/* Static cream paper wash — cell-independent so switching cells
+            doesn't repaint the background and produce a flicker on mobile. */}
         <div
           className="absolute inset-0"
           style={{
-            background: `radial-gradient(ellipse at 50% 55%, ${cellAccent(
-              selectedCell.id
-            )}30, transparent 65%), radial-gradient(ellipse at 35% 45%, #7c4dff20, transparent 55%), #faf6ed`,
+            background:
+              'radial-gradient(ellipse at 50% 55%, rgba(124,77,255,0.12), transparent 65%), radial-gradient(ellipse at 35% 45%, rgba(124,77,255,0.10), transparent 55%), #faf6ed',
           }}
         />
 
