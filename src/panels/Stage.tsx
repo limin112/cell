@@ -17,6 +17,14 @@ import { cellAccent } from '../data/cellIcons';
 import { CellViewer } from '../three/CellViewer';
 import { cellModelUrl } from '../three/assetRegistry';
 import { scopeFilter } from '../data/microscopeModes';
+import {
+  isWebGLAvailable,
+  isWeChatWebview,
+  WebGLBoundary,
+} from '../three/WebGLGuard';
+
+const WEBGL_OK = isWebGLAvailable();
+const IN_WECHAT = isWeChatWebview();
 
 export function Stage() {
   const { state, dispatch, selectedCell } = useStudio();
@@ -62,19 +70,27 @@ export function Stage() {
           <ViewModeChip />
         </div>
 
-        {/* 3D viewport — real GLB if registered, placeholder otherwise */}
-        {modelUrl ? (
+        {/* 3D viewport — real GLB if registered, placeholder otherwise.
+            Skip the Canvas entirely when WebGL isn't available (WeChat
+            webview on some Androids, lockdown modes). */}
+        {modelUrl && WEBGL_OK ? (
           <div
             className="absolute inset-0 transition-[filter] duration-300 ease-out"
             style={{ filter }}
           >
-            <CellViewer
-              url={modelUrl}
-              accent={cellAccent(selectedCell.id)}
-              autoRotate={spinning}
-              resetNonce={resetNonce}
-            />
+            <WebGLBoundary
+              fallback={<UnsupportedHint accent={cellAccent(selectedCell.id)} />}
+            >
+              <CellViewer
+                url={modelUrl}
+                accent={cellAccent(selectedCell.id)}
+                autoRotate={spinning}
+                resetNonce={resetNonce}
+              />
+            </WebGLBoundary>
           </div>
+        ) : modelUrl && !WEBGL_OK ? (
+          <UnsupportedHint accent={cellAccent(selectedCell.id)} />
         ) : (
           <div
             className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
@@ -232,4 +248,43 @@ function Switch({ on, onToggle }: { on: boolean; onToggle: () => void }) {
 
 function kindSubtitle(k: string): string {
   return k === 'prokaryote' ? 'Prokaryotic Cell' : 'Eukaryotic Cell';
+}
+
+/** Shown when WebGL is unavailable or the GLB fails to load — typical
+ *  in WeChat in-app browser / Mini-Program webview on Android. */
+function UnsupportedHint({ accent }: { accent: string }) {
+  const url = 'https://limin112.github.io/cell/';
+  return (
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none px-4">
+      <div className="pointer-events-auto max-w-sm text-center bg-white/85 backdrop-blur rounded-xl border border-paperDark shadow-md p-5">
+        <div
+          aria-hidden
+          className="w-14 h-14 mx-auto rounded-full mb-3"
+          style={{
+            background: `radial-gradient(circle at 35% 35%, #ffffff, ${accent}55 50%, ${accent}aa 100%)`,
+          }}
+        />
+        <p className="text-sm font-medium text-ink">
+          3D 视图无法在当前环境加载
+        </p>
+        {IN_WECHAT && (
+          <p className="text-xs text-ink/60 mt-1.5">
+            微信内置浏览器 / 小程序 WebView 对 WebGL 支持有限
+          </p>
+        )}
+        <p className="text-xs text-ink/60 mt-2">
+          请用 <b>Safari / Chrome</b> 打开:
+        </p>
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block mt-1.5 px-3 py-1.5 rounded-full bg-ink text-white text-xs font-medium hover:opacity-90 active:scale-95 transition"
+        >
+          在浏览器中打开 ↗
+        </a>
+        <p className="text-[10px] text-ink/40 mt-3 break-all">{url}</p>
+      </div>
+    </div>
+  );
 }
