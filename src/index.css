@@ -53,3 +53,7 @@ body {
 .animate-breathe:hover {
   animation-play-state: paused;
 }
+
+/* Hide the horizontal scrollbar on the mobile cell strip. */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }

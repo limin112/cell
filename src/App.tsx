@@ -1,51 +1,53 @@
-import { StudioProvider } from './state/StudioContext';
+import { startTransition } from 'react';
+import { StudioProvider, useStudio } from './state/StudioContext';
 import { TopBar } from './panels/TopBar';
 import { CellTypesPanel, OrganellesPanel } from './panels/LeftPanel';
 import { Stage } from './panels/Stage';
 import { OrganelleDetails } from './panels/RightPanel';
 import { MicroscopeView, CompareCells } from './panels/BottomRow';
+import { CellThumb } from './three/CellThumb';
 
 export default function App() {
   return (
     <StudioProvider>
-      <div className="min-h-screen w-screen flex flex-col bg-paper relative lg:h-screen lg:overflow-hidden">
+      {/*
+        100dvh = dynamic viewport, doesn't jitter when mobile browsers
+        collapse / expand their address bar — fixes the 'page keeps
+        refreshing' loop when Canvas resize re-triggers vh layout.
+      */}
+      <div className="h-[100dvh] w-screen flex flex-col overflow-hidden bg-paper relative">
         <TopBar />
         <SocialLinks />
 
-        <main
-          className="
-            flex-1 min-h-0 p-3 gap-3
-            flex flex-col overflow-y-auto
-            lg:grid lg:grid-cols-[230px_1fr_370px] lg:grid-rows-[1fr_auto] lg:overflow-hidden
-          "
-        >
-          {/* Stage — order 1 on mobile so the 3D viewport is first;
-              col 2 / row 1 on desktop */}
-          <div className="order-1 min-h-[58vh] flex flex-col lg:order-none lg:min-h-0 lg:col-start-2 lg:row-start-1">
+        {/* Mobile layout — single screen, no scroll, just title + 3D + cell strip */}
+        <main className="flex-1 min-h-0 p-2 gap-2 flex flex-col lg:hidden">
+          <div className="flex-1 min-h-0 flex flex-col">
             <Stage />
           </div>
+          <MobileCellStrip />
+        </main>
 
-          {/* CELL TYPES list — order 2 on mobile, col 1 / row 1 on desktop */}
-          <div className="order-2 min-h-[260px] flex flex-col lg:order-none lg:min-h-0 lg:col-start-1 lg:row-start-1">
+        {/* Desktop layout — full studio grid */}
+        <main className="hidden lg:grid flex-1 min-h-0 grid-cols-[230px_1fr_370px] grid-rows-[1fr_auto] gap-3 p-3 overflow-hidden">
+          <div className="min-h-0 col-start-1 row-start-1 flex flex-col">
             <CellTypesPanel />
           </div>
 
-          {/* ORGANELLES list — order 3 on mobile, col 1 / row 2 on desktop */}
-          <div className="order-3 min-h-[200px] lg:order-none lg:min-h-[170px] lg:max-h-[200px] lg:col-start-1 lg:row-start-2">
+          <div className="min-h-0 col-start-2 row-start-1 flex flex-col">
+            <Stage />
+          </div>
+
+          <div className="min-h-0 col-start-3 row-span-2">
+            <OrganelleDetails />
+          </div>
+
+          <div className="min-h-[170px] max-h-[200px] col-start-1 row-start-2 flex flex-col">
             <OrganellesPanel />
           </div>
 
-          {/* Microscope + Compare row — order 4 on mobile (stacked 1col on
-              narrow phones, 2col on small tablets), col 2 / row 2 on desktop */}
-          <div className="order-4 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-[170px] lg:order-none lg:max-h-[200px] lg:col-start-2 lg:row-start-2">
+          <div className="grid grid-cols-2 gap-3 min-h-[170px] max-h-[200px] col-start-2 row-start-2">
             <MicroscopeView />
             <CompareCells />
-          </div>
-
-          {/* Right column (details + notes + habitat) — pushed to bottom on
-              mobile; col 3 spanning both rows on desktop */}
-          <div className="order-5 min-h-0 lg:order-none lg:col-start-3 lg:row-span-2">
-            <OrganelleDetails />
           </div>
         </main>
       </div>
@@ -53,10 +55,46 @@ export default function App() {
   );
 }
 
+/** Compact horizontal cell switcher for mobile — keeps the rest of the studio
+ *  out of the way so the 3D viewport gets the whole screen. */
+function MobileCellStrip() {
+  const { state, dispatch, cells } = useStudio();
+  return (
+    <div className="shrink-0 bg-white/70 border border-paperDark rounded-xl px-2 py-2">
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-1 px-1">
+        {cells.map((c) => {
+          const active = c.id === state.selectedCellId;
+          return (
+            <button
+              key={c.id}
+              onClick={() =>
+                startTransition(() =>
+                  dispatch({ type: 'SELECT_CELL', id: c.id })
+                )
+              }
+              className={`shrink-0 flex flex-col items-center gap-1 px-2 py-1 rounded-lg transition active:scale-95 ${
+                active ? 'bg-[#e6efd8] ring-1 ring-olive/30' : ''
+              }`}
+            >
+              <CellThumb id={c.id} size={44} shape="square" />
+              <span
+                className={`text-[10px] leading-tight max-w-[68px] truncate ${
+                  active ? 'text-ink font-medium' : 'text-ink/60'
+                }`}
+              >
+                {c.nameEn}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function SocialLinks() {
   return (
     <div className="fixed bottom-3 right-3 sm:bottom-4 sm:right-4 z-50 flex flex-col items-end gap-2 max-w-[calc(100vw-1.5rem)]">
-      {/* Hand-written sticky note — hidden on very narrow phones to save room */}
       <div className="hidden sm:block self-start bg-[#fdf2b8] text-ink text-xs font-serif italic px-3 py-1.5 rounded-md shadow-md rotate-[-3deg] border border-[#e9d98a]/60 relative">
         <span aria-hidden className="mr-1">👋</span>
         Like it? Follow me on X!
@@ -67,7 +105,6 @@ function SocialLinks() {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3 relative">
-        {/* Pointing finger — hidden on very narrow phones (cramped) */}
         <span
           aria-hidden
           className="hidden sm:block absolute -left-11 top-1/2 -translate-y-1/2 text-3xl pointer-events-none animate-point select-none drop-shadow"
@@ -122,7 +159,6 @@ function GitHubIcon({ size = 16 }: { size?: number }) {
 }
 
 function XIcon({ size = 16 }: { size?: number }) {
-  // Lucide doesn't ship a current X glyph; inline the simple wordmark path.
   return (
     <svg
       viewBox="0 0 24 24"
