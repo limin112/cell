@@ -16,7 +16,7 @@ export function CellTypesPanel() {
   const todoCells = cells.filter((c) => TODO_CELL_IDS.has(c.id));
 
   return (
-    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0">
+    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 flex-1">
       <header className="flex items-center justify-between px-4 py-2.5 border-b border-paperDark">
         <div className="flex items-center gap-1.5">
           <span aria-hidden className="text-sm leading-none">🌱</span>
@@ -102,7 +102,7 @@ export function OrganellesPanel() {
   const accent = cellAccent(selectedCell.id);
 
   return (
-    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0">
+    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 flex-1">
       <header className="flex items-center justify-between px-4 py-2.5 border-b border-paperDark">
         <div className="flex items-center gap-1.5">
           <span aria-hidden className="text-accent text-sm leading-none">✦</span>

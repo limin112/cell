@@ -18,7 +18,7 @@ export function RightColumn() {
   }
 
   return (
-    <div className="flex flex-col gap-3 min-h-0 overflow-y-auto">
+    <div className="flex flex-col gap-3 min-h-0 overflow-y-auto h-full">
       <OrganelleDetailsCard />
       <BiologicalNotesCard />
       <WhereItOccursCard />

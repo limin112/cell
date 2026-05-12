@@ -26,7 +26,7 @@ export function Stage() {
   const filter = scopeFilter(state.scopeMode);
 
   return (
-    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden relative">
+    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden relative flex-1">
       {/* Title — compact so the 3D viewport gets max height */}
       <div key={selectedCell.id} className="px-4 sm:px-6 pt-2 sm:pt-3 pb-1 shrink-0 fade-rise">
         <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink leading-tight">

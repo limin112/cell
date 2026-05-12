@@ -8,7 +8,7 @@ export function MicroscopeView() {
   const { state, dispatch, selectedCell } = useStudio();
 
   return (
-    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden">
+    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden flex-1">
       <header className="flex items-center gap-1.5 px-4 py-2.5 border-b border-paperDark">
         <span className="text-[11px] font-semibold tracking-[0.2em] text-ink/50">
           MICROSCOPE VIEW
@@ -88,7 +88,7 @@ export function CompareCells() {
   const other = cells.find((c) => c.id !== selectedCell.id) ?? cells[0]!;
 
   return (
-    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden">
+    <section className="bg-white/70 rounded-xl border border-paperDark flex flex-col min-h-0 overflow-hidden flex-1">
       <header className="flex items-center gap-1.5 px-4 py-2.5 border-b border-paperDark">
         <span className="text-[11px] font-semibold tracking-[0.2em] text-ink/50">
           COMPARE CELLS
