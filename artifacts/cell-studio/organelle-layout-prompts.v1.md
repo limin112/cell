@@ -1,24 +1,4 @@
-# Organelle Layout Sheets — GPT image 2 prompt v1
-
-> **任务**：为已 Tripo 落地的 5 个细胞（`plant-cell` / `animal-cell` / `neuron` / `white-blood-cell` / `muscle-cell`）各出一张 **复合 organelle 分格图**。每张大图 = 1 个细胞内所有器官的独立插画，按 3×2 栅格排列，FE 按像素坐标裁成单件素材，用于右侧 Organelle Detail badge。
->
-> **驱动决策**：业主 2026-05-11 在 group channel 选定 option C（composite layout + FE crop），替代 42 条单器官 prompt。scope：5 细胞 × 6 panel grid = 5 张图一次出完。`epithelial-cell` / `bacterial-cell` 本轮不做（对应 Tripo 也 pause）。
->
-> **配套文件**：
-> - Style Anchor v2：见 `prompts.v2.md` 顶部，本文件所有 prompt 复用
-> - Schema：`organelle-schema.v0.1.json`
-> - 配色：`copy.phase5.json._meta.notes`（accent hex 清单）
->
-> **输出规格（5 张图统一）**：
-> - 1536×1024 PNG，横版 3:2
-> - 3 列 × 2 行栅格，每格 512×512（零内部 border，只靠 cream 底色自然分格）
-> - 每格独立居中一个器官，cream 纸纹底
-> - 无文字、无标签、无编号、无箭头、无连线
-> - 风格与 5 张整细胞图完全一致（BOLD VOLUMETRIC + polychromatic）
->
-> **文件名**：出图后按 `{cell-id}-organelle-sheet.png` 命名。
-
----
+# 细胞器分格大图 prompt — 5 sheets × 6 panels
 
 ## 共用 Style Anchor（所有 5 条 prompt 头部插入）
 
