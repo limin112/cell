@@ -114,7 +114,7 @@ function SocialLinks() {
         </span>
 
         <a
-          href="https://x.com/MinLiBuilds"
+          href="https://x.com/intent/follow?screen_name=MinLiBuilds"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Follow on X: @MinLiBuilds"

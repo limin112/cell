@@ -8,7 +8,6 @@ import {
   Bounds,
 } from '@react-three/drei';
 import type { Group } from 'three';
-import { CELL_MODEL_URL } from './assetRegistry';
 
 type Props = {
   /** Full path under /public, e.g. "/models/plant-cell.glb" */
@@ -94,8 +93,8 @@ function RotatingModel({ url, spinning }: { url: string; spinning: boolean }) {
   );
 }
 
-// Prefetch hints for drei's loader cache. Pull paths from the registry so
-// the BASE_URL prefix is applied consistently in all environments.
-for (const url of Object.values(CELL_MODEL_URL)) {
-  useGLTF.preload(url);
-}
+// NOTE: We intentionally do NOT call useGLTF.preload here.
+// Eagerly fetching + decoding 5 × multi-MB GLBs at startup cost ~80–120MB
+// of JS heap before the user clicked anything — enough for WeChat /
+// X5 webview on low-RAM Androids to kill the page. We now lazy-load on
+// first cell selection only.

@@ -2,7 +2,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bounds, Center, Environment, useGLTF } from '@react-three/drei';
 import { cellAccent, cellIcon } from '../data/cellIcons';
-import { cellModelUrl, CELL_MODEL_URL } from './assetRegistry';
+import { cellModelUrl } from './assetRegistry';
 
 type Props = {
   id: string;
@@ -21,12 +21,6 @@ type Props = {
 };
 
 const SS_PREFIX = 'cell-thumb:v2:';
-
-// Kick off GLB downloads before any thumb mounts — the 5–8 MB files dominate
-// the cold path and we want them parsed by the time Capture starts counting.
-for (const url of Object.values(CELL_MODEL_URL)) {
-  useGLTF.preload(url);
-}
 
 function readCache(id: string): string | null {
   try {
